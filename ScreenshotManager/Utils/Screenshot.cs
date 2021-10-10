@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScreenshotManager.Models;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -34,12 +35,24 @@ namespace ScreenshotManager.Utils {
       return Take(screen.Bounds);
     }
 
+    public static Bitmap Take(ScreenModel screen) {
+      return Take(screen.X, screen.Y, screen.Width, screen.Height);
+    }
+
     public static Bitmap TakePrimary() {
       return Take(PrimaryScreenX, PrimaryScreenY, PrimaryScreenWidth, PrimaryScreenHeight);
     }
 
     public static Bitmap TakeFull() {
       return Take(FullscreenX, FullscreenY, FullscreenWidth, FullscreenHeight);
+    }
+
+    public static string CreateFilename() {
+      return CreateFilename(DateTime.Now);
+    }
+
+    public static string CreateFilename(DateTime dt) {
+      return $"{dt:yyyy-MM-dd_HH-mm-ss_ffff}.jpg";
     }
 
     public static BitmapImage UrlToBitmapImage(string url) {

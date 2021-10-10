@@ -1,0 +1,56 @@
+﻿using ScreenshotManager.Utils;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ScreenshotManager.Models {
+  public class ScreenModel {
+    public bool Primary { get; }
+    public int Index { get; }
+    public string Name { get; }
+    public int X { get; }
+    public int Y { get; }
+    public int Width { get; }
+    public int Height { get; }
+
+    public ScreenModel(Screen screen, int index) {
+      this.Primary = screen.Primary;
+      this.Index = index;
+      this.Name = screen.DeviceName;
+      this.X = screen.Bounds.X;
+      this.Y = screen.Bounds.Y;
+      this.Width = screen.Bounds.Width;
+      this.Height = screen.Bounds.Height;
+    }
+
+    public Bitmap Take() {
+      return Screenshot.Take(this);
+    }
+
+    public void Save() {
+      Take().Save(Screenshot.CreateFilename());
+    }
+
+    public async void SaveAsync() {
+      await Task.Run(() => Save());
+    }
+
+    public static ScreenModel GetPrimary() {
+      return GetPrimary(GetAllSorted());
+    }
+
+    public static ScreenModel GetPrimary(ScreenModel[] allSorted) {
+      return allSorted.FirstOrDefault(x => x.Primary);
+    }
+
+    public static ScreenModel[] GetAllSorted() {
+      var sortedScreens = Screen.AllScreens.OrderBy(s => s.Bounds.X).ThenBy(s => s.Bounds.Y).ToArray();
+      var result = new ScreenModel[sortedScreens.Count()];
+      for (int i = 0; i < result.Length; i++) {
+        result[i] = new ScreenModel(sortedScreens[i], i + 1);
+      }
+      return result;
+    }
+  }
+}

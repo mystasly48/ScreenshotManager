@@ -6,20 +6,41 @@
         xmlns:local="clr-namespace:ScreenshotManager.Views"
         mc:Ignorable="d"
         Title="Screenshot Manager"
-        Height="450"
-        Width="800">
+        Height="460"
+        Width="700">
   <Grid>
-    <StackPanel Orientation="Vertical">
-      <Grid Height="50">
-        <Button Content="Take Screenshot"
-                Command="{Binding TakeScreenshotCommand}"
+    <Grid VerticalAlignment="Top">
+      <StackPanel Orientation="Horizontal"
+                  Height="50">
+        <Button Content="1枚撮影"
+                Command="{Binding TakeOneCommand}"
                 Width="100"
                 Height="25"
-                Margin="10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top" />
-      </Grid>
-      <Image Source="{Binding TakenScreenshot}" Stretch="Uniform"/>
-    </StackPanel>
+                Margin="10" />
+        <Button Content="連続撮影"
+                Command="{Binding TakeContinuousCommand}"
+                Width="100"
+                Height="25"
+                Margin="10" />
+        <ComboBox ItemsSource="{Binding AllScreens}"
+                  SelectedItem="{Binding TargetScreen}"
+                  DisplayMemberPath="Index"
+                  Width="100"
+                  Height="25"
+                  Margin="10" />
+        <TextBox Text="{Binding Interval}"
+                 Width="100"
+                 Height="25"
+                 Margin="10" />
+        <TextBox Text="{Binding Seconds}"
+                 Width="100"
+                 Height="25"
+                 Margin="10" />
+      </StackPanel>
+    </Grid>
+    <Grid Margin="10, 60, 10, 10">
+      <Image Source="{Binding TakenScreenshot}"
+             Stretch="Uniform" />
+    </Grid>
   </Grid>
 </Window>
