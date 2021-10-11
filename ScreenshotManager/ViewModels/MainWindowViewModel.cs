@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ScreenshotManager.ViewModels {
@@ -44,29 +45,17 @@ namespace ScreenshotManager.ViewModels {
     }
 
     private async void UpdateImageModelsToLocalAsync() {
-      foreach (ImageModel m in await Task.Run(() => GetLocalImages())) {
-        ImageModels.Add(m);
-      }
-    }
-
-    private List<ImageModel> GetLocalImages() {
-      string[] files = Directory.GetFiles(TargetFolder, "*.jpg");
-      List<ImageModel> models = new List<ImageModel>();
-      foreach (string file in files) {
-        models.Add(new ImageModel(Screenshot.UrlToBitmapImage(file), file));
-      }
-      return models;
-    }
-
-    private async Task<List<ImageModel>> GetLocalImagesAsync() {
-      return await Task.Run(() => {
-        string[] files = Directory.GetFiles(TargetFolder, "*.jpg");
-        List<ImageModel> models = new List<ImageModel>();
+      await Task.Run(() => {
+        string[] files = GetLocalImageFiles();
         foreach (string file in files) {
-          models.Add(new ImageModel(Screenshot.UrlToBitmapImage(file), file));
+          var model = new ImageModel(Screenshot.UrlToBitmapImage(file), file);
+          Application.Current.Dispatcher.Invoke(() => ImageModels.Add(model));
         }
-        return models;
       });
+    }
+
+    private string[] GetLocalImageFiles() {
+      return Directory.GetFiles(TargetFolder, "*.jpg");
     }
 
     private async void ExecuteTakeScreenshotCommand(object obj) {

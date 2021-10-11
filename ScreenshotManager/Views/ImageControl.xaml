@@ -11,5 +11,10 @@
              Height="180">
   <Image Source="{Binding ImageSource}"
          Stretch="Uniform">
+    <Image.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="テスト" />
+      </ContextMenu>
+    </Image.ContextMenu>
   </Image>
 </UserControl>
