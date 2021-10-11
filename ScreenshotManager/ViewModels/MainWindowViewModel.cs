@@ -11,8 +11,8 @@ using System.Windows.Input;
 
 namespace ScreenshotManager.ViewModels {
   public class MainWindowViewModel : Observable {
-    public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshotCommand);
-    public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshotsCommand);
+    public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
+    public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
 
     public static string ProductName => "ScreenshotManager";
     public static string TargetFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), ProductName);
@@ -48,7 +48,8 @@ namespace ScreenshotManager.ViewModels {
       await Task.Run(() => {
         string[] files = GetLocalImageFiles();
         foreach (string file in files) {
-          var model = new ImageModel(Screenshot.UrlToBitmapImage(file), file);
+          string filename = file.Substring(TargetFolder.Length);
+          var model = new ImageModel(Screenshot.UrlToBitmapImage(file), filename, file);
           Application.Current.Dispatcher.Invoke(() => ImageModels.Add(model));
         }
       });
@@ -58,11 +59,11 @@ namespace ScreenshotManager.ViewModels {
       return Directory.GetFiles(TargetFolder, "*.jpg");
     }
 
-    private async void ExecuteTakeScreenshotCommand(object obj) {
+    private async void ExecuteTakeScreenshot(object obj) {
       ImageModels.Add(await TakeScreenshotAsync());
     }
 
-    private async void ExecuteTakeScreenshotsCommand(object obj) {
+    private async void ExecuteTakeScreenshots(object obj) {
       foreach (ImageModel m in await TakeScreenshotsAsync(Interval, Seconds)) {
         ImageModels.Add(m);
       }
@@ -88,7 +89,7 @@ namespace ScreenshotManager.ViewModels {
         var filename = Screenshot.CreateFilename();
         var path = Path.Combine(TargetFolder, filename);
         bmp.Save(path);
-        return new ImageModel(bmp, filename);
+        return new ImageModel(bmp, filename, path);
       });
     }
   }

@@ -13,7 +13,15 @@
          Stretch="Uniform">
     <Image.ContextMenu>
       <ContextMenu>
-        <MenuItem Header="テスト" />
+        <MenuItem Header="画像をコピー"
+                  Command="{Binding CopyImageToClipboardCommand}" />
+        <MenuItem Header="パスをコピー"
+                  Command="{Binding CopyPathToClipboardCommand}"/>
+        <MenuItem Header="ファイルを開く"
+                  Command="{Binding OpenImageCommand}"/>
+        <MenuItem Header="フォルダを開く"
+                  Command="{Binding OpenFolderCommand}"/>
+        <!--<MenuItem Header="削除" />-->
       </ContextMenu>
     </Image.ContextMenu>
   </Image>

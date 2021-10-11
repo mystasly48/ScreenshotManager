@@ -7,8 +7,8 @@
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         mc:Ignorable="d"
         Title="Screenshot Manager"
-        Height="460"
-        Width="700">
+        Height="700"
+        Width="1200">
   <Grid>
     <Grid VerticalAlignment="Top">
       <StackPanel Orientation="Horizontal"
@@ -26,17 +26,20 @@
         <ComboBox ItemsSource="{Binding AllScreens}"
                   SelectedItem="{Binding TargetScreen}"
                   DisplayMemberPath="Index"
-                  Width="100"
+                  Width="50"
                   Height="25"
-                  Margin="10" />
+                  Margin="10"
+                  HorizontalContentAlignment="Right" />
         <TextBox Text="{Binding Interval}"
-                 Width="100"
+                 Width="50"
                  Height="25"
-                 Margin="10" />
+                 Margin="10"
+                 TextAlignment="Right" />
         <TextBox Text="{Binding Seconds}"
-                 Width="100"
+                 Width="50"
                  Height="25"
-                 Margin="10" />
+                 Margin="10"
+                 TextAlignment="Right" />
       </StackPanel>
     </Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
