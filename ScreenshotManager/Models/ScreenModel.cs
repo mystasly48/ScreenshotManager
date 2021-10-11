@@ -1,7 +1,6 @@
 ﻿using ScreenshotManager.Utils;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ScreenshotManager.Models {
@@ -28,14 +27,6 @@ namespace ScreenshotManager.Models {
       return Screenshot.Take(this);
     }
 
-    public void Save() {
-      Take().Save(Screenshot.CreateFilename());
-    }
-
-    public async void SaveAsync() {
-      await Task.Run(() => Save());
-    }
-
     public static ScreenModel GetPrimary() {
       return GetPrimary(GetAllSorted());
     }
@@ -46,7 +37,7 @@ namespace ScreenshotManager.Models {
 
     public static ScreenModel[] GetAllSorted() {
       var sortedScreens = Screen.AllScreens.OrderBy(s => s.Bounds.X).ThenBy(s => s.Bounds.Y).ToArray();
-      var result = new ScreenModel[sortedScreens.Count()];
+      var result = new ScreenModel[sortedScreens.Length];
       for (int i = 0; i < result.Length; i++) {
         result[i] = new ScreenModel(sortedScreens[i], i + 1);
       }

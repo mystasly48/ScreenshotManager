@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenshotManager.Views"
+        xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         mc:Ignorable="d"
         Title="Screenshot Manager"
         Height="460"
@@ -38,9 +39,26 @@
                  Margin="10" />
       </StackPanel>
     </Grid>
-    <Grid Margin="10, 60, 10, 10">
-      <Image Source="{Binding TakenScreenshot}"
-             Stretch="Uniform" />
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Margin="10, 60, 10, 10">
+      <ItemsControl ItemsSource="{Binding ImageModels, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <local:ImageControl ImageModel="{Binding}"
+                                Margin="0 20" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <wpftk:VirtualizingWrapPanel Margin="20 0"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Top"
+                                         VirtualizingPanel.VirtualizationMode="Recycling"
+                                         VirtualizingPanel.IsVirtualizing="True"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+    </ScrollViewer>
   </Grid>
 </Window>
