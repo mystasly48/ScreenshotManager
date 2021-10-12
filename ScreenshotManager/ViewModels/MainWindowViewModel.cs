@@ -18,7 +18,25 @@ namespace ScreenshotManager.ViewModels {
     public static string TargetFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), ProductName);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
-    public ScreenModel TargetScreen { get; set; } = ScreenModel.GetPrimary();
+
+    private int _selectedScreenIndex;
+    public int SelectedScreenIndex {
+      get => _selectedScreenIndex;
+      set {
+        _selectedScreenIndex = value;
+        SetProperty(ref _selectedScreenIndex, value);
+      }
+    }
+
+    private ScreenModel _selectedScreen;
+    public ScreenModel SelectedScreen {
+      get => _selectedScreen;
+      set {
+        _selectedScreen = value;
+        SetProperty(ref _selectedScreen, value);
+        SelectedScreenIndex = AllScreens.IndexOf(value);
+      }
+    }
 
     private int _interval = 100;
     public int Interval {
@@ -34,6 +52,7 @@ namespace ScreenshotManager.ViewModels {
 
     public MainWindowViewModel() {
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
+      this.SelectedScreen = ScreenModel.GetPrimary();
       ImageModelsManager.Models = new ObservableCollection<ImageModel>();
       UpdateImageModelsToLocalAsync();
     }
@@ -79,7 +98,7 @@ namespace ScreenshotManager.ViewModels {
 
     private async Task<ImageModel> TakeScreenshotAsync() {
       return await Task.Run(() => {
-        var bmp = TargetScreen.Take();
+        var bmp = SelectedScreen.Take();
         var filename = Screenshot.CreateFilename();
         var path = Path.Combine(TargetFolder, filename);
         bmp.Save(path);

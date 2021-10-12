@@ -5,6 +5,8 @@ using System.Windows.Forms;
 
 namespace ScreenshotManager.Models {
   public class ScreenModel {
+    private static ScreenModel[] _allSorted;
+
     public bool Primary { get; }
     public int Index { get; }
     public string IndexedName => $"Screen #{Index}";
@@ -29,7 +31,7 @@ namespace ScreenshotManager.Models {
     }
 
     public static ScreenModel GetPrimary() {
-      return GetPrimary(GetAllSorted());
+      return GetPrimary(_allSorted ?? GetAllSorted());
     }
 
     public static ScreenModel GetPrimary(ScreenModel[] allSorted) {
@@ -42,6 +44,7 @@ namespace ScreenshotManager.Models {
       for (int i = 0; i < result.Length; i++) {
         result[i] = new ScreenModel(sortedScreens[i], i + 1);
       }
+      _allSorted = result;
       return result;
     }
   }

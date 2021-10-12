@@ -25,7 +25,7 @@
                 Width="100"
                 Margin="10" />
         <ComboBox ItemsSource="{Binding AllScreens}"
-                  SelectedItem="{Binding TargetScreen}"
+                  SelectedIndex="{Binding SelectedScreenIndex}"
                   DisplayMemberPath="IndexedName"
                   Width="120"
                   Margin="10"
