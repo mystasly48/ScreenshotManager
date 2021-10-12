@@ -20,12 +20,6 @@ namespace ScreenshotManager.ViewModels {
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
     public ScreenModel TargetScreen { get; set; } = ScreenModel.GetPrimary();
 
-    private ObservableCollection<ImageModel> _imageModels;
-    public ObservableCollection<ImageModel> ImageModels {
-      get => _imageModels;
-      set => SetProperty(ref _imageModels, value);
-    }
-
     private int _interval = 100;
     public int Interval {
       get => _interval;
@@ -40,7 +34,7 @@ namespace ScreenshotManager.ViewModels {
 
     public MainWindowViewModel() {
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
-      this.ImageModels = new ObservableCollection<ImageModel>();
+      ImageModelsManager.Models = new ObservableCollection<ImageModel>();
       UpdateImageModelsToLocalAsync();
     }
 
@@ -50,7 +44,7 @@ namespace ScreenshotManager.ViewModels {
         foreach (string file in files) {
           string filename = file.Substring(TargetFolder.Length);
           var model = new ImageModel(Screenshot.UrlToBitmapImage(file), filename, file);
-          Application.Current.Dispatcher.Invoke(() => ImageModels.Add(model));
+          Application.Current.Dispatcher.Invoke(() => ImageModelsManager.Add(model));
         }
       });
     }
@@ -60,12 +54,12 @@ namespace ScreenshotManager.ViewModels {
     }
 
     private async void ExecuteTakeScreenshot(object obj) {
-      ImageModels.Add(await TakeScreenshotAsync());
+      ImageModelsManager.Add(await TakeScreenshotAsync());
     }
 
     private async void ExecuteTakeScreenshots(object obj) {
       foreach (ImageModel m in await TakeScreenshotsAsync(Interval, Seconds)) {
-        ImageModels.Add(m);
+        ImageModelsManager.Add(m);
       }
     }
 

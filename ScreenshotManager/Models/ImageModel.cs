@@ -1,6 +1,7 @@
 ﻿using ScreenshotManager.Utils;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -8,10 +9,11 @@ using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
   public class ImageModel {
-    public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation(ExecuteCopyImageToClipboard);
-    public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation(ExecuteCopyPathToClipboard);
-    public ICommand OpenImageCommand => new AnotherCommandImplementation(ExecuteOpenImage);
-    public ICommand OpenFolderCommand => new AnotherCommandImplementation(ExecuteOpenFolder);
+    public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
+    public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
+    public ICommand OpenImageCommand => new AnotherCommandImplementation((obj) => OpenImage());
+    public ICommand OpenFolderCommand => new AnotherCommandImplementation((obj) => OpenFolder());
+    public ICommand RemoveImageCommand => new AnotherCommandImplementation((obj) => RemoveImage());
 
     public ImageSource ImageSource { get; }
     public string FolderName => AbsolutePath.Substring(0, AbsolutePath.Length - Filename.Length);
@@ -38,15 +40,7 @@ namespace ScreenshotManager.Models {
       Clipboard.SetText(AbsolutePath);
     }
 
-    private void ExecuteCopyImageToClipboard(object obj) {
-      CopyImageToClipboard();
-    }
-
-    private void ExecuteCopyPathToClipboard(object obj) {
-      CopyPathToClipboard();
-    }
-
-    private void ExecuteOpenImage(object obj) {
+    public void OpenImage() {
       var app = new ProcessStartInfo() {
         FileName = AbsolutePath,
         UseShellExecute = true
@@ -54,9 +48,18 @@ namespace ScreenshotManager.Models {
       Process.Start(app);
     }
 
-    private void ExecuteOpenFolder(object obj) {
+    public void OpenFolder() {
       string arg = "/select, \"" + AbsolutePath + "\"";
       Process.Start("explorer", arg);
+    }
+
+    public void RemoveImage() {
+      if (ImageModelsManager.Contains(this)) {
+        ImageModelsManager.Remove(this);
+      }
+      if (File.Exists(AbsolutePath)) {
+        File.Delete(AbsolutePath);
+      }
     }
   }
 }

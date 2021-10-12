@@ -14,14 +14,16 @@
     <Image.ContextMenu>
       <ContextMenu>
         <MenuItem Header="画像をコピー"
-                  Command="{Binding CopyImageToClipboardCommand}" />
+                  Command="{Binding CopyImageToClipboardCommand}"
+                  CommandParameter="{Binding}"/>
         <MenuItem Header="パスをコピー"
                   Command="{Binding CopyPathToClipboardCommand}"/>
         <MenuItem Header="ファイルを開く"
                   Command="{Binding OpenImageCommand}"/>
         <MenuItem Header="フォルダを開く"
                   Command="{Binding OpenFolderCommand}"/>
-        <!--<MenuItem Header="削除" />-->
+        <MenuItem Header="削除"
+                  Command="{Binding RemoveImageCommand}"/>
       </ContextMenu>
     </Image.ContextMenu>
   </Image>

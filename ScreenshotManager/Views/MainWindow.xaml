@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenshotManager.Views"
+        xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         mc:Ignorable="d"
         Title="Screenshot Manager"
@@ -47,7 +48,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
                   Margin="10, 60, 10, 10">
-      <ItemsControl ItemsSource="{Binding ImageModels, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+      <ItemsControl ItemsSource="{Binding Path=(utils:ImageModelsManager.Models)}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <local:ImageControl ImageModel="{Binding}"
