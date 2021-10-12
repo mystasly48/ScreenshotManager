@@ -16,16 +16,20 @@
       <ContextMenu>
         <MenuItem Header="画像をコピー"
                   Command="{Binding CopyImageToClipboardCommand}"
-                  CommandParameter="{Binding}"/>
+                  CommandParameter="{Binding}" />
         <MenuItem Header="パスをコピー"
-                  Command="{Binding CopyPathToClipboardCommand}"/>
+                  Command="{Binding CopyPathToClipboardCommand}" />
         <MenuItem Header="ファイルを開く"
-                  Command="{Binding OpenImageCommand}"/>
+                  Command="{Binding OpenImageCommand}" />
         <MenuItem Header="フォルダを開く"
-                  Command="{Binding OpenFolderCommand}"/>
+                  Command="{Binding OpenFolderCommand}" />
         <MenuItem Header="削除"
-                  Command="{Binding RemoveImageCommand}"/>
+                  Command="{Binding RemoveImageCommand}" />
       </ContextMenu>
     </Image.ContextMenu>
+    <Image.InputBindings>
+      <MouseBinding Gesture="LeftClick"
+                    Command="{Binding ShowImageCommand}" />
+    </Image.InputBindings>
   </Image>
 </UserControl>

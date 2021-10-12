@@ -1,4 +1,5 @@
 ﻿using ScreenshotManager.Utils;
+using ScreenshotManager.Views;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -14,6 +15,7 @@ namespace ScreenshotManager.Models {
     public ICommand OpenImageCommand => new AnotherCommandImplementation((obj) => OpenImage());
     public ICommand OpenFolderCommand => new AnotherCommandImplementation((obj) => OpenFolder());
     public ICommand RemoveImageCommand => new AnotherCommandImplementation((obj) => RemoveImage());
+    public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImage());
 
     public ImageSource ImageSource { get; }
     public string FolderName => AbsolutePath.Substring(0, AbsolutePath.Length - Filename.Length);
@@ -60,6 +62,10 @@ namespace ScreenshotManager.Models {
       if (File.Exists(AbsolutePath)) {
         File.Delete(AbsolutePath);
       }
+    }
+
+    public void ShowImage() {
+      HandyControl.Controls.Dialog.Show(new ImageDialog(ImageSource));
     }
   }
 }
