@@ -6,10 +6,12 @@
         xmlns:local="clr-namespace:ScreenshotManager.Views"
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
         Title="Screenshot Manager"
         Height="700"
-        Width="1200">
+        Width="1200"
+        Background="Transparent">
   <Grid>
     <Grid VerticalAlignment="Top">
       <StackPanel Orientation="Horizontal"
@@ -17,29 +19,24 @@
         <Button Content="1枚撮影"
                 Command="{Binding TakeOneCommand}"
                 Width="100"
-                Height="25"
                 Margin="10" />
         <Button Content="連続撮影"
                 Command="{Binding TakeContinuousCommand}"
                 Width="100"
-                Height="25"
                 Margin="10" />
         <ComboBox ItemsSource="{Binding AllScreens}"
                   SelectedItem="{Binding TargetScreen}"
                   DisplayMemberPath="IndexedName"
-                  Width="80"
-                  Height="25"
+                  Width="120"
                   Margin="10"
                   VerticalContentAlignment="Center" />
         <TextBox Text="{Binding Interval}"
                  Width="50"
-                 Height="25"
                  Margin="10"
                  TextAlignment="Right"
                  VerticalContentAlignment="Center" />
         <TextBox Text="{Binding Seconds}"
                  Width="50"
-                 Height="25"
                  Margin="10"
                  TextAlignment="Right"
                  VerticalContentAlignment="Center" />
