@@ -7,7 +7,8 @@ namespace ScreenshotManager.Models {
   public class ScreenModel {
     public bool Primary { get; }
     public int Index { get; }
-    public string Name { get; }
+    public string IndexedName => $"Screen #{Index}";
+    public string OriginalName { get; }
     public int X { get; }
     public int Y { get; }
     public int Width { get; }
@@ -16,7 +17,7 @@ namespace ScreenshotManager.Models {
     public ScreenModel(Screen screen, int index) {
       this.Primary = screen.Primary;
       this.Index = index;
-      this.Name = screen.DeviceName;
+      this.OriginalName = screen.DeviceName;
       this.X = screen.Bounds.X;
       this.Y = screen.Bounds.Y;
       this.Width = screen.Bounds.Width;

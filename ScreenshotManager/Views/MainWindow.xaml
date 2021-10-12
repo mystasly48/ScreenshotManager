@@ -25,21 +25,23 @@
                 Margin="10" />
         <ComboBox ItemsSource="{Binding AllScreens}"
                   SelectedItem="{Binding TargetScreen}"
-                  DisplayMemberPath="Index"
-                  Width="50"
+                  DisplayMemberPath="IndexedName"
+                  Width="80"
                   Height="25"
                   Margin="10"
-                  HorizontalContentAlignment="Right" />
+                  VerticalContentAlignment="Center" />
         <TextBox Text="{Binding Interval}"
                  Width="50"
                  Height="25"
                  Margin="10"
-                 TextAlignment="Right" />
+                 TextAlignment="Right"
+                 VerticalContentAlignment="Center" />
         <TextBox Text="{Binding Seconds}"
                  Width="50"
                  Height="25"
                  Margin="10"
-                 TextAlignment="Right" />
+                 TextAlignment="Right"
+                 VerticalContentAlignment="Center" />
       </StackPanel>
     </Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
