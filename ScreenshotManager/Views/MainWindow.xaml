@@ -30,16 +30,22 @@
                   Width="120"
                   Margin="10"
                   VerticalContentAlignment="Center" />
-        <TextBox Text="{Binding Interval}"
-                 Width="50"
-                 Margin="10"
-                 TextAlignment="Right"
-                 VerticalContentAlignment="Center" />
-        <TextBox Text="{Binding Seconds}"
-                 Width="50"
-                 Margin="10"
-                 TextAlignment="Right"
-                 VerticalContentAlignment="Center" />
+        <hc:NumericUpDown Value="{Binding Interval}"
+                          Increment="100"
+                          Minimum="100"
+                          Maximum="10000"
+                          Width="80"
+                          Margin="10"
+                          HorizontalContentAlignment="Right"
+                          VerticalContentAlignment="Center" />
+        <hc:NumericUpDown Value="{Binding Seconds}"
+                          Increment="1"
+                          Minimum="1"
+                          Maximum="10"
+                          Width="80"
+                          Margin="10"
+                          HorizontalContentAlignment="Right"
+                          VerticalContentAlignment="Center" />
       </StackPanel>
     </Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
