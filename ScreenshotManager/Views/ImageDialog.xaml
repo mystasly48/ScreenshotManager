@@ -10,7 +10,8 @@
         d:DesignWidth="800">
   <Grid>
     <hc:SimplePanel>
-      <Image Source="{Binding Image}">
+      <Image Source="{Binding Image}"
+             RenderOptions.BitmapScalingMode="HighQuality">
         <Image.InputBindings>
           <MouseBinding Gesture="LeftClick"
                         Command="hc:ControlCommands.Close" />
