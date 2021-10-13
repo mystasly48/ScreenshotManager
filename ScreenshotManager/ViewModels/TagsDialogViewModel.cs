@@ -4,7 +4,10 @@ using System.Windows.Input;
 
 namespace ScreenshotManager.ViewModels {
   public class TagsDialogViewModel : Observable {
-    public ObservableSet<string> Tags { get; set; }
+    public ObservableSet<string> Tags {
+      get => _imageModel.Tags;
+      set => _imageModel.Tags = value;
+    }
     private string _tagName;
     public string TagName {
       get => _tagName;
@@ -16,13 +19,11 @@ namespace ScreenshotManager.ViewModels {
 
     public TagsDialogViewModel(ImageModel model) {
       _imageModel = model;
-      Tags = new ObservableSet<string>(model.Tags);
     }
 
     private void ExecuteAddTag(object obj) {
       if (!string.IsNullOrEmpty(TagName)) {
         Tags.Add(TagName);
-        _imageModel.Tags.Add(TagName);
       }
       TagName = "";
     }
