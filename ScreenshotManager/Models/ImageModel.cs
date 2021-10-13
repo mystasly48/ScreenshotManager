@@ -17,13 +17,15 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
     [JsonIgnore]
+    public ICommand EditTagsCommand => new AnotherCommandImplementation((obj) => ShowEditTagsDialog());
+    [JsonIgnore]
     public ICommand OpenImageCommand => new AnotherCommandImplementation((obj) => OpenImage());
     [JsonIgnore]
     public ICommand OpenFolderCommand => new AnotherCommandImplementation((obj) => OpenFolder());
     [JsonIgnore]
     public ICommand RemoveImageCommand => new AnotherCommandImplementation((obj) => RemoveImage());
     [JsonIgnore]
-    public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImage());
+    public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImageDialog());
 
     [JsonIgnore]
     public ImageSource ImageSource { get; }
@@ -79,8 +81,12 @@ namespace ScreenshotManager.Models {
       }
     }
 
-    public void ShowImage() {
+    public void ShowImageDialog() {
       HandyControl.Controls.Dialog.Show(new ImageDialog(ImageSource));
+    }
+
+    public void ShowEditTagsDialog() {
+      HandyControl.Controls.Dialog.Show(new TagsDialog(this));
     }
   }
 }

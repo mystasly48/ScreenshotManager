@@ -20,6 +20,8 @@
                   CommandParameter="{Binding}" />
         <MenuItem Header="パスをコピー"
                   Command="{Binding CopyPathToClipboardCommand}" />
+        <MenuItem Header="タグを編集"
+                  Command="{Binding EditTagsCommand}" />
         <MenuItem Header="ファイルを開く"
                   Command="{Binding OpenImageCommand}" />
         <MenuItem Header="フォルダを開く"
