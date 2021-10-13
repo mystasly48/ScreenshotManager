@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:ScreenshotManager.Views"
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
@@ -12,6 +13,11 @@
         Height="700"
         Width="1200"
         Background="Transparent">
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Closing">
+      <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
   <Grid>
     <Grid VerticalAlignment="Top">
       <StackPanel Orientation="Horizontal"

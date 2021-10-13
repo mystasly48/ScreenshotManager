@@ -34,7 +34,7 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public string Filename => Path.GetFileName(AbsolutePath);
     public string AbsolutePath { get; }
-    public List<string> Tags { get; set; } = new List<string>();
+    public HashSet<string> Tags { get; set; } = new();
 
     public ImageModel(string path) {
       this.ImageSource = Screenshot.UrlToBitmapImage(path);

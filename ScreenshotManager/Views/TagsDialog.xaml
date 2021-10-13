@@ -22,10 +22,14 @@
   <Grid>
     <hc:SimplePanel Width="600">
       <StackPanel>
-        <hc:TagContainer ItemsSource="{Binding Tags}"
-                         ItemContainerStyle="{StaticResource TagCustomStyle}"
-                         Margin="10"
-                         Padding="5" />
+        <ScrollViewer Margin="10"
+                      Height="100"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+          <hc:TagContainer ItemsSource="{Binding Tags}"
+                           ItemContainerStyle="{StaticResource TagCustomStyle}"
+                           Padding="5" />
+        </ScrollViewer>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center">
           <hc:TextBox Margin="10"

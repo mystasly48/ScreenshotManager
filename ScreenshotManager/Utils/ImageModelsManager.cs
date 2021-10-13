@@ -18,18 +18,15 @@ namespace ScreenshotManager.Utils {
       set {
         _models = value;
         NotifyStaticPropertyChanged();
-        SaveImageModelsSetting();
       }
     }
 
     public static void Add(ImageModel model) {
       Models.Add(model);
-      SaveImageModelsSetting();
     }
 
     public static bool Remove(ImageModel model) {
       var res = Models.Remove(model);
-      SaveImageModelsSetting();
       return res;
     }
 
@@ -63,7 +60,7 @@ namespace ScreenshotManager.Utils {
       }
     }
 
-    private static void SaveImageModelsSetting() {
+    public static void Save() {
       using (var writer = new StreamWriter(Settings.ImageModelsSettingFilePath, false, Encoding.UTF8)) {
         var models = new List<ImageModel>(Models);
         var json = JsonConvert.SerializeObject(models, Formatting.Indented);

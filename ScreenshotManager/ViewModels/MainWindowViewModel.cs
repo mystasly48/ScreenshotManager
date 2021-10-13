@@ -11,6 +11,7 @@ namespace ScreenshotManager.ViewModels {
   public class MainWindowViewModel : Observable {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
+    public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
 
@@ -83,6 +84,10 @@ namespace ScreenshotManager.ViewModels {
         bmp.Save(path);
         return new ImageModel(bmp, path);
       });
+    }
+
+    private void ExecuteClosing(object obj) {
+      ImageModelsManager.Save();
     }
   }
 }

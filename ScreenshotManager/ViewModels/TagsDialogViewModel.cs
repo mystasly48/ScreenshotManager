@@ -1,11 +1,10 @@
 ﻿using ScreenshotManager.Models;
 using ScreenshotManager.Utils;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace ScreenshotManager.ViewModels {
   public class TagsDialogViewModel : Observable {
-    public ObservableCollection<string> Tags { get; set; }
+    public ObservableSet<string> Tags { get; set; }
     private string _tagName;
     public string TagName {
       get => _tagName;
@@ -13,13 +12,17 @@ namespace ScreenshotManager.ViewModels {
     }
     public ICommand AddTagCommand => new AnotherCommandImplementation((obj) => ExecuteAddTag(obj));
 
+    private ImageModel _imageModel;
+
     public TagsDialogViewModel(ImageModel model) {
-      Tags = new ObservableCollection<string>(model.Tags);
+      _imageModel = model;
+      Tags = new ObservableSet<string>(model.Tags);
     }
 
     private void ExecuteAddTag(object obj) {
       if (!string.IsNullOrEmpty(TagName)) {
         Tags.Add(TagName);
+        _imageModel.Tags.Add(TagName);
       }
       TagName = "";
     }
