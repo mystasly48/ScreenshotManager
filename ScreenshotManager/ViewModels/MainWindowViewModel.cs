@@ -19,7 +19,7 @@ namespace ScreenshotManager.ViewModels {
     public int SelectedScreenIndex {
       get => _selectedScreenIndex;
       set {
-        _selectedScreenIndex = value;
+        _selectedScreen = AllScreens[value];
         SetProperty(ref _selectedScreenIndex, value);
       }
     }
@@ -28,9 +28,8 @@ namespace ScreenshotManager.ViewModels {
     public ScreenModel SelectedScreen {
       get => _selectedScreen;
       set {
-        _selectedScreen = value;
+        _selectedScreenIndex = AllScreens.IndexOf(value);
         SetProperty(ref _selectedScreen, value);
-        SelectedScreenIndex = AllScreens.IndexOf(value);
       }
     }
 
