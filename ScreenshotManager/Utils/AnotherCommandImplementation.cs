@@ -31,7 +31,7 @@ namespace ScreenshotManager.Utils {
       }
     }
 
-    public void Refresh() {
+    public static void Refresh() {
       CommandManager.InvalidateRequerySuggested();
     }
   }

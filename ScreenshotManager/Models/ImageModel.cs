@@ -1,5 +1,7 @@
-﻿using ScreenshotManager.Utils;
+﻿using Newtonsoft.Json;
+using ScreenshotManager.Utils;
 using ScreenshotManager.Views;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -10,27 +12,40 @@ using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
   public class ImageModel {
+    [JsonIgnore]
     public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
+    [JsonIgnore]
     public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
+    [JsonIgnore]
     public ICommand OpenImageCommand => new AnotherCommandImplementation((obj) => OpenImage());
+    [JsonIgnore]
     public ICommand OpenFolderCommand => new AnotherCommandImplementation((obj) => OpenFolder());
+    [JsonIgnore]
     public ICommand RemoveImageCommand => new AnotherCommandImplementation((obj) => RemoveImage());
+    [JsonIgnore]
     public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImage());
 
+    [JsonIgnore]
     public ImageSource ImageSource { get; }
-    public string FolderName => AbsolutePath.Substring(0, AbsolutePath.Length - Filename.Length);
-    public string Filename { get; }
+    [JsonIgnore]
+    public string FolderName => Path.GetDirectoryName(AbsolutePath);
+    [JsonIgnore]
+    public string Filename => Path.GetFileName(AbsolutePath);
     public string AbsolutePath { get; }
+    public List<string> Tags { get; set; } = new List<string>();
 
-    public ImageModel(Bitmap bmp, string filename, string path) {
-      this.ImageSource = Screenshot.BitmapToBitmapImage(bmp);
-      this.Filename = filename;
+    public ImageModel(string path) {
+      this.ImageSource = Screenshot.UrlToBitmapImage(path);
       this.AbsolutePath = path;
     }
 
-    public ImageModel(ImageSource image, string filename, string path) {
+    public ImageModel(Bitmap bmp, string path) {
+      this.ImageSource = Screenshot.BitmapToBitmapImage(bmp);
+      this.AbsolutePath = path;
+    }
+
+    public ImageModel(ImageSource image, string path) {
       this.ImageSource = image;
-      this.Filename = filename;
       this.AbsolutePath = path;
     }
 

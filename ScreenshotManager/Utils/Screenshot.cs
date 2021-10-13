@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Utils {
-  public class Screenshot {
+  public static class Screenshot {
     public static int PrimaryScreenX => Screen.PrimaryScreen.Bounds.X;
     public static int PrimaryScreenY => Screen.PrimaryScreen.Bounds.Y;
     public static int PrimaryScreenWidth => Screen.PrimaryScreen.Bounds.Width;

@@ -1,21 +1,16 @@
 ﻿using ScreenshotManager.Models;
 using ScreenshotManager.Utils;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ScreenshotManager.ViewModels {
   public class MainWindowViewModel : Observable {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
-
-    public static string ProductName => "ScreenshotManager";
-    public static string TargetFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), ProductName);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
 
@@ -53,23 +48,7 @@ namespace ScreenshotManager.ViewModels {
     public MainWindowViewModel() {
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
       this.SelectedScreen = ScreenModel.GetPrimary();
-      ImageModelsManager.Models = new ObservableCollection<ImageModel>();
-      UpdateImageModelsToLocalAsync();
-    }
-
-    private async void UpdateImageModelsToLocalAsync() {
-      await Task.Run(() => {
-        string[] files = GetLocalImageFiles();
-        foreach (string file in files) {
-          string filename = file.Substring(TargetFolder.Length);
-          var model = new ImageModel(Screenshot.UrlToBitmapImage(file), filename, file);
-          Application.Current.Dispatcher.Invoke(() => ImageModelsManager.Add(model));
-        }
-      });
-    }
-
-    private string[] GetLocalImageFiles() {
-      return Directory.GetFiles(TargetFolder, "*.jpg");
+      ImageModelsManager.Initialize();
     }
 
     private async void ExecuteTakeScreenshot(object obj) {
@@ -100,9 +79,9 @@ namespace ScreenshotManager.ViewModels {
       return await Task.Run(() => {
         var bmp = SelectedScreen.Take();
         var filename = Screenshot.CreateFilename();
-        var path = Path.Combine(TargetFolder, filename);
+        var path = Path.Combine(Settings.ScreenshotFolder, filename);
         bmp.Save(path);
-        return new ImageModel(bmp, filename, path);
+        return new ImageModel(bmp, path);
       });
     }
   }
