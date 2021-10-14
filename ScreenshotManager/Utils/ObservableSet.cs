@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 namespace ScreenshotManager.Utils {
   public class ObservableSet<T> : ObservableCollection<T> {
     public ObservableSet() : base() { }
-    public ObservableSet(HashSet<T> items) : base(items) { }
+    public ObservableSet(IEnumerable<T> items) : base(items) { }
 
     protected override void InsertItem(int index, T item) {
       if (!Contains(item)) {

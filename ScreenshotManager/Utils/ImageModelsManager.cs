@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,15 +22,10 @@ namespace ScreenshotManager.Utils {
       }
     }
 
-    public static void Add(ImageModel model) {
-      Models.Add(model);
-    }
+    private static readonly string[] AcceptedImageExtensions = new []{ ".jpg", ".jpeg", ".png" };
 
-    public static bool Remove(ImageModel model) {
-      var res = Models.Remove(model);
-      return res;
-    }
-
+    public static void Add(ImageModel model) => Models.Add(model);
+    public static bool Remove(ImageModel model) => Models.Remove(model);
     public static bool Contains(ImageModel model) => Models.Contains(model);
 
     public static void Initialize() {
@@ -37,26 +33,41 @@ namespace ScreenshotManager.Utils {
       UpdateImageModelsToLocalAsync();
     }
 
+    // FIXME: Crash here when you close the app while this is running
     public async static void UpdateImageModelsToLocalAsync() {
       await Task.Run(() => {
+        List<ImageModel> modelsFromJson = Load();
         string[] files = GetLocalImageFiles();
-        foreach (string file in files) {
-          var model = new ImageModel(file);
-          // FIXME: Crash here when close the app while this is running
-          Application.Current.Dispatcher.Invoke(() => Add(model));
+        foreach (var file in files) {
+          var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
+          if (matchedModel == null) {
+            // newly added
+            var model = new ImageModel(file);
+            Application.Current.Dispatcher.Invoke(() => Add(model));
+          } else {
+            // already exists
+            var model = new ImageModel(matchedModel.AbsolutePath, matchedModel.Tags);
+            Application.Current.Dispatcher.Invoke(() => Add(model));
+          }
         }
+        Save();
       });
     }
 
     public static string[] GetLocalImageFiles() {
-      return Directory.GetFiles(Settings.ScreenshotFolder, "*.jpg");
+      List<string> result = new();
+      foreach (var extension in AcceptedImageExtensions) {
+        result.AddRange(Directory.GetFiles(Settings.ScreenshotFolder, $"*{extension}").Where(file => file.EndsWith(extension)));
+      }
+      return result.OrderBy(x => x).ToArray();
     }
 
-    private static void LoadImageModelsSetting() {
+    // Note: ImageSource is dead, thus you need to re-instantiate it using AbsolutePath.
+    private static List<ImageModel> Load() {
       using (var reader = new StreamReader(Settings.ImageModelsSettingFilePath, Encoding.UTF8)) {
         var json = reader.ReadToEnd();
-        var models = JsonConvert.DeserializeObject<List<ImageModel>>(json);
-        Models = new ObservableCollection<ImageModel>(models);
+        var modelsFromJson = JsonConvert.DeserializeObject<List<ImageModel>>(json);
+        return modelsFromJson;
       }
     }
 

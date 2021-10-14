@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ScreenshotManager.Utils;
 using ScreenshotManager.Views;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -33,12 +32,22 @@ namespace ScreenshotManager.Models {
     public string FolderName => Path.GetDirectoryName(AbsolutePath);
     [JsonIgnore]
     public string Filename => Path.GetFileName(AbsolutePath);
-    public string AbsolutePath { get; }
+    [JsonProperty]
+    public string AbsolutePath { get; private set; }
+    [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
+
+    public ImageModel() { }
 
     public ImageModel(string path) {
       this.ImageSource = Screenshot.UrlToBitmapImage(path);
       this.AbsolutePath = path;
+    }
+
+    public ImageModel(string path, ObservableSet<string> tags) {
+      this.ImageSource = Screenshot.UrlToBitmapImage(path);
+      this.AbsolutePath = path;
+      this.Tags = tags;
     }
 
     public ImageModel(Bitmap bmp, string path) {
