@@ -8,7 +8,7 @@ namespace ScreenshotManager.Hotkeys {
     private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
     [DllImport("user32.dll")]
-    private static extern bool UnregisterHotkey(IntPtr hWnd, int id);
+    private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
     private class Window : NativeWindow, IDisposable {
       private static int WM_HOTKEY = 0x0312;
@@ -53,7 +53,7 @@ namespace ScreenshotManager.Hotkeys {
 
     public void Dispose() {
       for (int i = _currentId; i > 0; i--) {
-        UnregisterHotkey(_window.Handle, i);
+        UnregisterHotKey(_window.Handle, i);
       }
       _window.Dispose();
     }
