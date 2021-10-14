@@ -14,8 +14,8 @@ namespace ScreenshotManager.Utils {
     public static int PrimaryScreenWidth => Screen.PrimaryScreen.Bounds.Width;
     public static int PrimaryScreenHeight => Screen.PrimaryScreen.Bounds.Height;
 
-    public static int FullscreenX => (int)SystemParameters.VirtualScreenTop;
-    public static int FullscreenY => (int)SystemParameters.VirtualScreenLeft;
+    public static int FullscreenX => (int)SystemParameters.VirtualScreenLeft;
+    public static int FullscreenY => (int)SystemParameters.VirtualScreenTop;
     public static int FullscreenWidth => (int)SystemParameters.VirtualScreenWidth;
     public static int FullscreenHeight => (int)SystemParameters.VirtualScreenHeight;
 

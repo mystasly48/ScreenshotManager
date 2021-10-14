@@ -8,11 +8,13 @@
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="Screenshot Manager"
         Height="700"
         Width="1200"
-        Background="Transparent">
+        Background="Transparent"
+        Closed="Window_Closed">
   <i:Interaction.Triggers>
     <i:EventTrigger EventName="Closing">
       <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
@@ -68,7 +70,7 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <local:ImageControl ImageModel="{Binding}"
-                                  Margin="0 20" />
+                                  Margin="10" />
             </DataTemplate>
           </ItemsControl.ItemTemplate>
           <ItemsControl.ItemsPanel>

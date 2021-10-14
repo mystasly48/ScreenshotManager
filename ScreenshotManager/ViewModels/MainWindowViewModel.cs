@@ -21,6 +21,7 @@ namespace ScreenshotManager.ViewModels {
       get => _selectedScreenIndex;
       set {
         _selectedScreen = AllScreens[value];
+        SettingsManager.SelectedScreenIndex = value;
         SetProperty(ref _selectedScreenIndex, value);
       }
     }
@@ -30,31 +31,45 @@ namespace ScreenshotManager.ViewModels {
       get => _selectedScreen;
       set {
         _selectedScreenIndex = AllScreens.IndexOf(value);
+        SettingsManager.SelectedScreenIndex = _selectedScreenIndex;
         SetProperty(ref _selectedScreen, value);
       }
     }
 
-    private int _interval = 100;
+    private int _interval;
     public int Interval {
       get => _interval;
-      set => SetProperty(ref _interval, value);
+      set {
+        SettingsManager.Interval = value;
+        SetProperty(ref _interval, value);
+      }
     }
 
-    private int _seconds = 3;
+    private int _seconds;
     public int Seconds {
       get => _seconds;
-      set => SetProperty(ref _seconds, value);
+      set {
+        SettingsManager.Seconds = value;
+        SetProperty(ref _seconds, value);
+      }
     }
 
     private KeyboardHook _hotkey;
 
     public MainWindowViewModel() {
+      SettingsManager.Initialize();
+      ImageModelsManager.Initialize();
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
-      this.SelectedScreen = ScreenModel.GetPrimary();
+      if (0 <= SettingsManager.SelectedScreenIndex && SettingsManager.SelectedScreenIndex < this.AllScreens.Count) {
+        this.SelectedScreenIndex = SettingsManager.SelectedScreenIndex;
+      } else {
+        this.SelectedScreen = ScreenModel.GetPrimary();
+      }
+      this.Interval = SettingsManager.Interval;
+      this.Seconds = SettingsManager.Seconds;
       _hotkey = new KeyboardHook();
       _hotkey.RegisterHotkey(Hotkeys.ModifierKeys.None, System.Windows.Forms.Keys.PrintScreen);
       _hotkey.KeyPressed += PrintScreen_KeyPressed;
-      ImageModelsManager.Initialize();
     }
 
     private void PrintScreen_KeyPressed(object sender, KeyPressedEventArgs e) {
@@ -66,6 +81,7 @@ namespace ScreenshotManager.ViewModels {
     }
 
     private async void ExecuteTakeScreenshots(object obj) {
+      // TODO: take screenshots in background and show the results synchronously
       foreach (ImageModel m in await TakeScreenshotsAsync(Interval, Seconds)) {
         ImageModelsManager.Add(m);
       }
@@ -89,13 +105,14 @@ namespace ScreenshotManager.ViewModels {
       return await Task.Run(() => {
         var bmp = SelectedScreen.Take();
         var filename = Screenshot.CreateFilename();
-        var path = Path.Combine(Settings.ScreenshotFolder, filename);
+        var path = Path.Combine(SettingsManager.ScreenshotFolder, filename);
         bmp.Save(path);
         return new ImageModel(bmp, path);
       });
     }
 
     private void ExecuteClosing(object obj) {
+      SettingsManager.Save();
       ImageModelsManager.Save();
       _hotkey.Dispose();
     }

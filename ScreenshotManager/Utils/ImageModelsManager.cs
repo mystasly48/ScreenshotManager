@@ -29,8 +29,7 @@ namespace ScreenshotManager.Utils {
     public static bool Contains(ImageModel model) => Models.Contains(model);
 
     public static void Initialize() {
-      Directory.CreateDirectory(Settings.SettingsFolder);
-      Directory.CreateDirectory(Settings.ScreenshotFolder);
+      Directory.CreateDirectory(SettingsManager.ScreenshotFolder);
       UpdateImageModelsToLocalAsync();
     }
 
@@ -58,17 +57,17 @@ namespace ScreenshotManager.Utils {
     public static string[] GetLocalImageFiles() {
       List<string> result = new();
       foreach (var extension in AcceptedImageExtensions) {
-        result.AddRange(Directory.GetFiles(Settings.ScreenshotFolder, $"*{extension}").Where(file => file.EndsWith(extension)));
+        result.AddRange(Directory.GetFiles(SettingsManager.ScreenshotFolder, $"*{extension}").Where(file => file.EndsWith(extension)));
       }
       return result.OrderBy(x => x).ToArray();
     }
 
     // Note: ImageSource is dead, thus you need to re-instantiate it using AbsolutePath.
     private static List<ImageModel> Load() {
-      if (!File.Exists(Settings.ImageModelsSettingFilePath)) {
+      if (!File.Exists(SettingsManager.ImageModelsSettingFilePath)) {
         return new List<ImageModel>();
       }
-      using (var reader = new StreamReader(Settings.ImageModelsSettingFilePath, Encoding.UTF8)) {
+      using (var reader = new StreamReader(SettingsManager.ImageModelsSettingFilePath, Encoding.UTF8)) {
         var json = reader.ReadToEnd();
         var modelsFromJson = JsonConvert.DeserializeObject<List<ImageModel>>(json);
         return modelsFromJson;
@@ -76,7 +75,7 @@ namespace ScreenshotManager.Utils {
     }
 
     public static void Save() {
-      using (var writer = new StreamWriter(Settings.ImageModelsSettingFilePath, false, Encoding.UTF8)) {
+      using (var writer = new StreamWriter(SettingsManager.ImageModelsSettingFilePath, false, Encoding.UTF8)) {
         var models = new List<ImageModel>(Models);
         var json = JsonConvert.SerializeObject(models, Formatting.Indented);
         writer.WriteLine(json);
