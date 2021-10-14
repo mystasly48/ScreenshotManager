@@ -1,4 +1,5 @@
-﻿using ScreenshotManager.Models;
+﻿using ScreenshotManager.Hotkeys;
+using ScreenshotManager.Models;
 using ScreenshotManager.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,10 +46,19 @@ namespace ScreenshotManager.ViewModels {
       set => SetProperty(ref _seconds, value);
     }
 
+    private KeyboardHook _hotkey;
+
     public MainWindowViewModel() {
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
       this.SelectedScreen = ScreenModel.GetPrimary();
+      _hotkey = new KeyboardHook();
+      _hotkey.RegisterHotkey(Hotkeys.ModifierKeys.None, System.Windows.Forms.Keys.PrintScreen);
+      _hotkey.KeyPressed += PrintScreen_KeyPressed;
       ImageModelsManager.Initialize();
+    }
+
+    private void PrintScreen_KeyPressed(object sender, KeyPressedEventArgs e) {
+      ExecuteTakeScreenshot(null);
     }
 
     private async void ExecuteTakeScreenshot(object obj) {
@@ -87,6 +97,7 @@ namespace ScreenshotManager.ViewModels {
 
     private void ExecuteClosing(object obj) {
       ImageModelsManager.Save();
+      _hotkey.Dispose();
     }
   }
 }
