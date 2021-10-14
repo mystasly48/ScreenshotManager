@@ -18,10 +18,10 @@
       <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
     </i:EventTrigger>
   </i:Interaction.Triggers>
-  <Grid>
-    <Grid VerticalAlignment="Top">
-      <StackPanel Orientation="Horizontal"
-                  Height="50">
+  <Grid Margin="10">
+    <Grid VerticalAlignment="Top"
+          Height="50">
+      <StackPanel Orientation="Horizontal">
         <Button Content="1枚撮影"
                 Command="{Binding TakeOneCommand}"
                 Width="100"
@@ -59,26 +59,41 @@
                    HorizontalAlignment="Right" />
       </StackPanel>
     </Grid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled"
-                  Margin="10, 60, 10, 10">
-      <ItemsControl ItemsSource="{Binding Path=(utils:ImageModelsManager.Models)}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <local:ImageControl ImageModel="{Binding}"
-                                Margin="0 20" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <wpftk:VirtualizingWrapPanel Margin="20 0"
-                                         HorizontalAlignment="Left"
-                                         VerticalAlignment="Top"
-                                         VirtualizingPanel.VirtualizationMode="Recycling"
-                                         VirtualizingPanel.IsVirtualizing="True" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-      </ItemsControl>
-    </ScrollViewer>
+    <Grid Margin="0, 50, 0, 0">
+      <hc:ScrollViewer Name="ImageModelsScrollViewer"
+                       VerticalScrollBarVisibility="Auto"
+                       HorizontalScrollBarVisibility="Disabled"
+                       IsInertiaEnabled="True">
+        <ItemsControl ItemsSource="{Binding Path=(utils:ImageModelsManager.Models)}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <local:ImageControl ImageModel="{Binding}"
+                                  Margin="0 20" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <wpftk:VirtualizingWrapPanel Margin="20 0"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           VirtualizingPanel.VirtualizationMode="Recycling"
+                                           VirtualizingPanel.IsVirtualizing="True" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+        </ItemsControl>
+      </hc:ScrollViewer>
+      <Button Style="{StaticResource ButtonIconCircular}"
+              hc:IconElement.Geometry="{StaticResource UpGeometry}"
+              Click="ScrollToTopButton_Click"
+              Margin="0, 0, 10, 0"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Right" />
+      <Button Style="{StaticResource ButtonIconCircular}"
+              hc:IconElement.Geometry="{StaticResource DownGeometry}"
+              Click="ScrollToBottomButton_Click"
+              Margin="0, 0, 10, 0"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" />
+    </Grid>
   </Grid>
 </Window>

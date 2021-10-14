@@ -7,5 +7,13 @@ namespace ScreenshotManager.Views {
       InitializeComponent();
       this.DataContext = new MainWindowViewModel();
     }
+
+    private void ScrollToTopButton_Click(object sender, RoutedEventArgs e) {
+      ImageModelsScrollViewer.ScrollToTop();
+    }
+
+    private void ScrollToBottomButton_Click(object sender, RoutedEventArgs e) {
+      ImageModelsScrollViewer.ScrollToBottom();
+    }
   }
 }
