@@ -30,6 +30,7 @@ namespace ScreenshotManager.Utils {
 
     public static void Initialize() {
       Directory.CreateDirectory(Settings.SettingsFolder);
+      Directory.CreateDirectory(Settings.ScreenshotFolder);
       UpdateImageModelsToLocalAsync();
     }
 
@@ -64,6 +65,9 @@ namespace ScreenshotManager.Utils {
 
     // Note: ImageSource is dead, thus you need to re-instantiate it using AbsolutePath.
     private static List<ImageModel> Load() {
+      if (!File.Exists(Settings.ImageModelsSettingFilePath)) {
+        return new List<ImageModel>();
+      }
       using (var reader = new StreamReader(Settings.ImageModelsSettingFilePath, Encoding.UTF8)) {
         var json = reader.ReadToEnd();
         var modelsFromJson = JsonConvert.DeserializeObject<List<ImageModel>>(json);
