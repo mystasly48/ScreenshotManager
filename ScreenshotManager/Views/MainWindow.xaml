@@ -52,6 +52,11 @@
                           Margin="10"
                           HorizontalContentAlignment="Right"
                           VerticalContentAlignment="Center" />
+        <TextBlock Text="{Binding Path=(utils:ImageModelsManager.Models).Count, StringFormat={}{0} images}"
+                   Margin="10"
+                   Width="400"
+                   Style="{DynamicResource TextBlockBaseStyle}"
+                   HorizontalAlignment="Right" />
       </StackPanel>
     </Grid>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -70,7 +75,7 @@
                                          HorizontalAlignment="Left"
                                          VerticalAlignment="Top"
                                          VirtualizingPanel.VirtualizationMode="Recycling"
-                                         VirtualizingPanel.IsVirtualizing="True"/>
+                                         VirtualizingPanel.IsVirtualizing="True" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
       </ItemsControl>
