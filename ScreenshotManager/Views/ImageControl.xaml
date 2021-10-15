@@ -15,18 +15,18 @@
          RenderOptions.BitmapScalingMode="HighQuality">
     <Image.ContextMenu>
       <ContextMenu>
-        <MenuItem Header="画像をコピー"
+        <MenuItem Header="Copy the image"
                   Command="{Binding CopyImageToClipboardCommand}"
                   CommandParameter="{Binding}" />
-        <MenuItem Header="パスをコピー"
+        <MenuItem Header="Copy the file path"
                   Command="{Binding CopyPathToClipboardCommand}" />
-        <MenuItem Header="タグを編集"
+        <MenuItem Header="Edit tags"
                   Command="{Binding EditTagsCommand}" />
-        <MenuItem Header="ファイルを開く"
+        <MenuItem Header="Open the image"
                   Command="{Binding OpenImageCommand}" />
-        <MenuItem Header="フォルダを開く"
+        <MenuItem Header="Open the folder"
                   Command="{Binding OpenFolderCommand}" />
-        <MenuItem Header="削除"
+        <MenuItem Header="Delete"
                   Command="{Binding RemoveImageCommand}" />
       </ContextMenu>
     </Image.ContextMenu>
