@@ -5,16 +5,9 @@ namespace ScreenshotManager.Utils {
   public class Observable : INotifyPropertyChanged {
     public event PropertyChangedEventHandler PropertyChanged;
 
-    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null) {
-      if (Equals(storage, value)) {
-        return false;
-      }
-
+    protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null) {
       storage = value;
-
       OnPropertyChanged(propertyName);
-
-      return true;
     }
 
     /// <summary>

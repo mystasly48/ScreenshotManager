@@ -32,12 +32,20 @@
         </ScrollViewer>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center">
-          <hc:TextBox Margin="10"
-                      Width="300"
-                      Text="{Binding TagName}" />
+          <hc:TextBox Name="TagTextBox"
+                      Text="{Binding TagName}"
+                      Margin="10"
+                      Width="300">
+            <hc:TextBox.InputBindings>
+              <KeyBinding Key="Return"
+                          Command="{Binding AddTagCommand}"
+                          CommandParameter="{Binding ElementName=TagTextBox, Path=Text}" />
+            </hc:TextBox.InputBindings>
+          </hc:TextBox>
           <Button Margin="10"
                   Content="Add Tag"
-                  Command="{Binding AddTagCommand}" />
+                  Command="{Binding AddTagCommand}"
+                  CommandParameter="{Binding ElementName=TagTextBox, Path=Text}" />
         </StackPanel>
         <Button Content="Close"
                 Command="hc:ControlCommands.Close"

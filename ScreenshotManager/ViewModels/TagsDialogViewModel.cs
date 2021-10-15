@@ -22,8 +22,8 @@ namespace ScreenshotManager.ViewModels {
     }
 
     private void ExecuteAddTag(object obj) {
-      if (!string.IsNullOrEmpty(TagName)) {
-        Tags.Add(TagName);
+      if (obj is string tagName && !string.IsNullOrEmpty(tagName)) {
+        Tags.Add(tagName);
       }
       TagName = "";
     }
