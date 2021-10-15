@@ -14,5 +14,5 @@
   - Open the taken image with Windows default viewer
   - Open the taken image folder in Windows explorer
   - Remove the taken image
-	- Show the image in dialog
-	- Edit image tags
+  - Show the image in dialog
+  - Edit image tags
