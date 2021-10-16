@@ -7,18 +7,6 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
         Background="{DynamicResource RegionBrush}">
-  <Border.Resources>
-    <Style x:Key="TagCustomStyle"
-           BasedOn="{StaticResource TagBaseStyle}"
-           TargetType="hc:Tag">
-      <Setter Property="Content"
-              Value="{Binding}" />
-      <Setter Property="Margin"
-              Value="5" />
-      <Setter Property="ShowCloseButton"
-              Value="True" />
-    </Style>
-  </Border.Resources>
   <Grid>
     <hc:SimplePanel Width="600">
       <StackPanel>
@@ -26,9 +14,26 @@
                       Height="100"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
-          <hc:TagContainer ItemsSource="{Binding Tags}"
-                           ItemContainerStyle="{StaticResource TagCustomStyle}"
-                           Padding="5" />
+          <hc:CheckComboBox ItemsSource="{Binding Tags}"
+                            DisplayMemberPath="Name"
+                            SelectionChanged="CheckComboBox_SelectionChanged">
+            <hc:CheckComboBox.ItemContainerStyle>
+              <Style TargetType="hc:CheckComboBoxItem"
+                     BasedOn="{StaticResource CheckComboBoxItemBaseStyle}">
+                <Setter Property="IsSelected"
+                        Value="{Binding IsSelected}" />
+                <Setter Property="Visibility"
+                        Value="{Binding Visibility}" />
+              </Style>
+            </hc:CheckComboBox.ItemContainerStyle>
+            <hc:CheckComboBox.TagStyle>
+              <Style TargetType="hc:Tag"
+                     BasedOn="{StaticResource Tag4CheckComboBoxStyle}">
+                <Setter Property="Margin"
+                        Value="5" />
+              </Style>
+            </hc:CheckComboBox.TagStyle>
+          </hc:CheckComboBox>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center">

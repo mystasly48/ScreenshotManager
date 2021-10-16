@@ -8,7 +8,6 @@
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:hc="https://handyorg.github.io/handycontrol"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="Screenshot Manager"
         Height="700"
