@@ -58,9 +58,24 @@
                           VerticalContentAlignment="Center" />
         <TextBlock Text="{Binding Path=(utils:ImageModelsManager.Models).Count, StringFormat={}{0} images}"
                    Margin="10"
-                   Width="400"
+                   Width="100"
                    Style="{DynamicResource TextBlockBaseStyle}"
                    HorizontalAlignment="Right" />
+        <ComboBox SelectedIndex="{Binding SelectedSearchTagIndex}"
+                  DisplayMemberPath="Name"
+                  IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                  Margin="10"
+                  Width="200">
+          <ComboBox.ItemsSource>
+            <CompositeCollection>
+              <ListBoxItem Content="Please select" />
+              <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.Models)}" />
+            </CompositeCollection>
+          </ComboBox.ItemsSource>
+        </ComboBox>
+        <Button Content="Search"
+                Command="{Binding SearchTagCommand}"
+                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}" />
       </StackPanel>
     </Grid>
     <Grid Margin="0, 50, 0, 0">
@@ -68,7 +83,23 @@
                        VerticalScrollBarVisibility="Auto"
                        HorizontalScrollBarVisibility="Disabled"
                        IsInertiaEnabled="True">
-        <ItemsControl ItemsSource="{Binding Path=(utils:ImageModelsManager.Models)}">
+        <ItemsControl>
+          <ItemsControl.Style>
+            <Style>
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding VisibleSearchResults}"
+                             Value="True">
+                  <Setter Property="ItemsControl.ItemsSource"
+                          Value="{Binding SearchResultImageModels}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding VisibleSearchResults}"
+                             Value="False">
+                  <Setter Property="ItemsControl.ItemsSource"
+                          Value="{Binding Path=(utils:ImageModelsManager.Models)}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ItemsControl.Style>
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <local:ImageControl ImageModel="{Binding}"

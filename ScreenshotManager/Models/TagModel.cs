@@ -1,5 +1,4 @@
 ﻿using ScreenshotManager.Utils;
-using System.Linq;
 using System.Windows;
 
 namespace ScreenshotManager.Models {
@@ -54,34 +53,9 @@ namespace ScreenshotManager.Models {
       return false;
     }
 
-    public override int GetHashCode() {
-      return Name.GetHashCode();
-    }
-
-    public static bool operator ==(TagModel a, TagModel b) {
-      return Equals(a, b);
-    }
-
-    public static bool operator !=(TagModel a, TagModel b) {
-      return !Equals(a, b);
-    }
-
-    public override string ToString() {
-      return $"(Name: {Name}, IsSelected: {IsSelected})";
-    }
-
-    public static ObservableSet<TagModel> GetTagModels(ObservableSet<string> tags) {
-      return new ObservableSet<TagModel>(ImageModelsManager.Models.SelectMany(model => model.Tags).Select(tag => {
-        if (tags.Contains(tag)) {
-          return new TagModel(tag, true);
-        } else {
-          return new TagModel(tag);
-        }
-      }));
-    }
-
-    public static ObservableSet<string> GetSelectedTags(ObservableSet<TagModel> models) {
-      return new ObservableSet<string>(models.Where(model => model.IsSelected).Select(model => model.Name));
-    }
+    public override int GetHashCode() => Name.GetHashCode();
+    public static bool operator ==(TagModel a, TagModel b) => Equals(a, b);
+    public static bool operator !=(TagModel a, TagModel b) => !Equals(a, b);
+    public override string ToString() => $"(Name: {Name}, IsSelected: {IsSelected})";
   }
 }

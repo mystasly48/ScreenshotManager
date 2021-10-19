@@ -4,6 +4,7 @@ using ScreenshotManager.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ namespace ScreenshotManager.ViewModels {
   public class MainWindowViewModel : Observable {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
+    public ICommand SearchTagCommand => new AnotherCommandImplementation(ExecuteSearchTag);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
@@ -54,11 +56,42 @@ namespace ScreenshotManager.ViewModels {
       }
     }
 
+    private bool _visibleSearchResults;
+    public bool VisibleSearchResults {
+      get => _visibleSearchResults;
+      set => SetProperty(ref _visibleSearchResults, value);
+    }
+
+    private int _selectedSearchTagIndex;
+    public int SelectedSearchTagIndex {
+      get => _selectedSearchTagIndex;
+      set => SetProperty(ref _selectedSearchTagIndex, value);
+    }
+
+    public TagModel SelectedSearchTagModel {
+      get {
+        // consider that index 0 is "please select"
+        if (SelectedSearchTagIndex == 0) {
+          return null;
+        } else {
+          return TagModelsManager.Models[SelectedSearchTagIndex - 1]; 
+        }
+      }
+    }
+
+    private ObservableCollection<ImageModel> _searchResutImageModels;
+    public ObservableCollection<ImageModel> SearchResultImageModels {
+      get => _searchResutImageModels;
+      set => SetProperty(ref _searchResutImageModels, value);
+    }
+
     private KeyboardHook _hotkey;
 
     public MainWindowViewModel() {
       SettingsManager.Initialize();
       ImageModelsManager.Initialize();
+      TagModelsManager.Initialize();
+
       this.AllScreens = new ObservableCollection<ScreenModel>(ScreenModel.GetAllSorted());
       if (0 <= SettingsManager.SelectedScreenIndex && SettingsManager.SelectedScreenIndex < this.AllScreens.Count) {
         this.SelectedScreenIndex = SettingsManager.SelectedScreenIndex;
@@ -67,6 +100,7 @@ namespace ScreenshotManager.ViewModels {
       }
       this.Interval = SettingsManager.Interval;
       this.Seconds = SettingsManager.Seconds;
+
       _hotkey = new KeyboardHook();
       _hotkey.RegisterHotkey(Hotkeys.ModifierKeys.None, System.Windows.Forms.Keys.PrintScreen);
       _hotkey.KeyPressed += PrintScreen_KeyPressed;
@@ -109,6 +143,19 @@ namespace ScreenshotManager.ViewModels {
         bmp.Save(path);
         return new ImageModel(bmp, path);
       });
+    }
+
+    private void ExecuteSearchTag(object obj) {
+      if (SelectedSearchTagModel == null) {
+        // Change ItemsSource to ImageModelsManager.Models
+        VisibleSearchResults = false;
+      } else {
+        // Change ItemsSource to SearchResultImageModels
+        VisibleSearchResults = true;
+        var tagName = SelectedSearchTagModel.Name;
+        var models = ImageModelsManager.Models.Where(model => model.Tags.Contains(tagName));
+        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
+      }
     }
 
     private void ExecuteClosing(object obj) {

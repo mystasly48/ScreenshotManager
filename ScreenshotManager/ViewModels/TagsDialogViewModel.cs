@@ -21,12 +21,12 @@ namespace ScreenshotManager.ViewModels {
 
     public TagsDialogViewModel(ImageModel model) {
       _imageModel = model;
-      this.Tags = TagModel.GetTagModels(model.Tags);
+      this.Tags = TagModelsManager.GetTagModels(model.Tags);
       this.Tags.Add(TagModel.DummyTagModel);
     }
 
     public void UpdateTags() {
-      _imageModel.Tags = TagModel.GetSelectedTags(Tags);
+      _imageModel.Tags = TagModelsManager.GetSelectedTags(Tags);
       ImageModelsManager.Save();
     }
 

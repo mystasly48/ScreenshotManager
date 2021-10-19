@@ -16,8 +16,17 @@ namespace ScreenshotManager.Utils {
     private static ObservableCollection<ImageModel> _models = new();
     public static ObservableCollection<ImageModel> Models {
       get => _models;
-      set {
+      private set {
         _models = value;
+        NotifyStaticPropertyChanged();
+      }
+    }
+
+    private static bool _isModelsAvailable = false;
+    public static bool IsModelsAvailable {
+      get => _isModelsAvailable;
+      private set {
+        _isModelsAvailable = value;
         NotifyStaticPropertyChanged();
       }
     }
@@ -36,6 +45,7 @@ namespace ScreenshotManager.Utils {
     // FIXME: Crash here when you close the app while this is running
     public async static void UpdateImageModelsToLocalAsync() {
       await Task.Run(() => {
+        IsModelsAvailable = false;
         List<ImageModel> modelsFromJson = Load();
         string[] files = GetLocalImageFiles();
         foreach (var file in files) {
@@ -50,6 +60,7 @@ namespace ScreenshotManager.Utils {
             Application.Current.Dispatcher.Invoke(() => Add(model));
           }
         }
+        IsModelsAvailable = true;
         Save();
       });
     }
