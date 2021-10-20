@@ -37,6 +37,12 @@ namespace ScreenshotManager.Utils {
     public static bool Remove(ImageModel model) => Models.Remove(model);
     public static bool Contains(ImageModel model) => Models.Contains(model);
 
+    public static void AddAll(List<ImageModel> models) {
+      foreach (var model in models) {
+        Models.Add(model);
+      }
+    }
+
     public static void Initialize() {
       Directory.CreateDirectory(SettingsManager.ScreenshotFolder);
       UpdateImageModelsToLocalAsync();
@@ -48,17 +54,27 @@ namespace ScreenshotManager.Utils {
         IsModelsAvailable = false;
         List<ImageModel> modelsFromJson = Load();
         string[] files = GetLocalImageFiles();
+        // Add to Models every 50 files
+        List<ImageModel> tempModels = new List<ImageModel>();
+        const int MODELS_COUNT = 50;
         foreach (var file in files) {
           var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
           if (matchedModel == null) {
             // newly added
             var model = new ImageModel(file);
-            Application.Current.Dispatcher.Invoke(() => Add(model));
+            tempModels.Add(model);
           } else {
             // already exists
             var model = new ImageModel(matchedModel.AbsolutePath, matchedModel.Tags);
-            Application.Current.Dispatcher.Invoke(() => Add(model));
+            tempModels.Add(model);
           }
+          if (tempModels.Count == MODELS_COUNT) {
+            Application.Current.Dispatcher.Invoke(() => AddAll(tempModels));
+            tempModels.Clear();
+          }
+        }
+        if (tempModels.Count > 0) {
+          Application.Current.Dispatcher.Invoke(() => AddAll(tempModels));
         }
         IsModelsAvailable = true;
         Save();
