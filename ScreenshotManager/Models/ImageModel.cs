@@ -16,6 +16,8 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
     [JsonIgnore]
+    public ICommand CopyFilenameToClipboardCommand => new AnotherCommandImplementation((obj) => CopyFilenameToClipboard());
+    [JsonIgnore]
     public ICommand EditTagsCommand => new AnotherCommandImplementation((obj) => ShowEditTagsDialog());
     [JsonIgnore]
     public ICommand OpenImageCommand => new AnotherCommandImplementation((obj) => OpenImage());
@@ -66,6 +68,10 @@ namespace ScreenshotManager.Models {
 
     public void CopyPathToClipboard() {
       Clipboard.SetText(AbsolutePath);
+    }
+
+    public void CopyFilenameToClipboard() {
+      Clipboard.SetText(Filename);
     }
 
     public void OpenImage() {
