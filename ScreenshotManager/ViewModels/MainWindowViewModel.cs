@@ -141,7 +141,7 @@ namespace ScreenshotManager.ViewModels {
         var filename = Screenshot.CreateFilename();
         var path = Path.Combine(SettingsManager.ScreenshotFolder, filename);
         bmp.Save(path);
-        return new ImageModel(bmp, path);
+        return new ImageModel(path);
       });
     }
 

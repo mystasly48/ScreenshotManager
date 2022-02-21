@@ -29,7 +29,9 @@ namespace ScreenshotManager.Models {
     public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImageDialog());
 
     [JsonIgnore]
-    public ImageSource ImageSource { get; }
+    public ImageSource ImageSource => Screenshot.LoadBitmapImage(AbsolutePath);
+    [JsonIgnore]
+    public ImageSource Thumbnail { get; }
     [JsonIgnore]
     public string FolderName => Path.GetDirectoryName(AbsolutePath);
     [JsonIgnore]
@@ -39,27 +41,20 @@ namespace ScreenshotManager.Models {
     [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
 
+    const int THUMBNAIL_WIDTH = 320;
+    const int THUMBNAIL_HEIGHT = 180;
+
     public ImageModel() { }
 
     public ImageModel(string path) {
-      this.ImageSource = Screenshot.UrlToBitmapImage(path);
+      this.Thumbnail = Screenshot.LoadThumbnail(path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = path;
     }
 
     public ImageModel(string path, ObservableSet<string> tags) {
-      this.ImageSource = Screenshot.UrlToBitmapImage(path);
+      this.Thumbnail = Screenshot.LoadThumbnail(path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = path;
       this.Tags = tags;
-    }
-
-    public ImageModel(Bitmap bmp, string path) {
-      this.ImageSource = Screenshot.BitmapToBitmapImage(bmp);
-      this.AbsolutePath = path;
-    }
-
-    public ImageModel(ImageSource image, string path) {
-      this.ImageSource = image;
-      this.AbsolutePath = path;
     }
 
     public void CopyImageToClipboard() {
