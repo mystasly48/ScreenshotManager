@@ -41,6 +41,7 @@
                   Margin="10"
                   VerticalContentAlignment="Center" />
         <hc:NumericUpDown Value="{Binding Interval}"
+                          ToolTip="Set the interval to take burst screenshots"
                           Increment="100"
                           Minimum="100"
                           Maximum="10000"
@@ -49,6 +50,7 @@
                           HorizontalContentAlignment="Right"
                           VerticalContentAlignment="Center" />
         <hc:NumericUpDown Value="{Binding Seconds}"
+                          ToolTip="Set the continous seconds to take burst screenshots"
                           Increment="1"
                           Minimum="1"
                           Maximum="10"
@@ -57,6 +59,7 @@
                           HorizontalContentAlignment="Right"
                           VerticalContentAlignment="Center" />
         <TextBlock Text="{Binding Path=(utils:ImageModelsManager.Models).Count, StringFormat={}{0} images}"
+                   ToolTip="Total loaded images"
                    Margin="10"
                    Width="100"
                    Style="{DynamicResource TextBlockBaseStyle}"
@@ -64,8 +67,9 @@
         <ComboBox SelectedIndex="{Binding SelectedSearchTagIndex}"
                   DisplayMemberPath="Name"
                   IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                  ToolTip="Select a tag to search"
                   Margin="10"
-                  Width="200">
+                  Width="180">
           <ComboBox.ItemsSource>
             <CompositeCollection>
               <ListBoxItem Content="Please select" />
@@ -73,9 +77,27 @@
             </CompositeCollection>
           </ComboBox.ItemsSource>
         </ComboBox>
-        <Button Content="Search"
+        <Button Content="Search ①"
                 Command="{Binding SearchTagCommand}"
-                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}" />
+                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                ToolTip="Execute search by a selected tag"/>
+        <ComboBox SelectedIndex="{Binding SelectedSearchAutoTagIndex}"
+                  DisplayMemberPath="Name"
+                  IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                  ToolTip="Select a tag to search"
+                  Margin="10"
+                  Width="180">
+          <ComboBox.ItemsSource>
+            <CompositeCollection>
+              <ListBoxItem Content="Please select" />
+              <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.AutoModels)}" />
+            </CompositeCollection>
+          </ComboBox.ItemsSource>
+        </ComboBox>
+        <Button Content="Search ②"
+                Command="{Binding SearchAutoTagCommand}"
+                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                ToolTip="Execute search by a selected tag" />
       </StackPanel>
     </Grid>
     <Grid Margin="0, 50, 0, 0">
@@ -120,12 +142,14 @@
       <Button Style="{StaticResource ButtonIconCircular}"
               hc:IconElement.Geometry="{StaticResource UpGeometry}"
               Click="ScrollToTopButton_Click"
+              ToolTip="Scroll up to the top"
               Margin="0, 0, 10, 0"
               VerticalAlignment="Top"
               HorizontalAlignment="Right" />
       <Button Style="{StaticResource ButtonIconCircular}"
               hc:IconElement.Geometry="{StaticResource DownGeometry}"
               Click="ScrollToBottomButton_Click"
+              ToolTip="Scroll down to the bottom"
               Margin="0, 0, 10, 0"
               VerticalAlignment="Bottom"
               HorizontalAlignment="Right" />

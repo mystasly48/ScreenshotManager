@@ -14,6 +14,7 @@ namespace ScreenshotManager.ViewModels {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
     public ICommand SearchTagCommand => new AnotherCommandImplementation(ExecuteSearchTag);
+    public ICommand SearchAutoTagCommand => new AnotherCommandImplementation(ExecuteSearchAutoTag);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
@@ -75,6 +76,23 @@ namespace ScreenshotManager.ViewModels {
           return null;
         } else {
           return TagModelsManager.Models[SelectedSearchTagIndex - 1]; 
+        }
+      }
+    }
+
+    private int _selectedSearchAutoTagIndex;
+    public int SelectedSearchAutoTagIndex {
+      get => _selectedSearchAutoTagIndex;
+      set => SetProperty(ref _selectedSearchAutoTagIndex, value);
+    }
+
+    public TagModel SelectedSearchAutoTagModel {
+      get {
+        // consider that index 0 is "please select"
+        if (SelectedSearchAutoTagIndex == 0) {
+          return null;
+        } else {
+          return TagModelsManager.AutoModels[SelectedSearchAutoTagIndex - 1];
         }
       }
     }
@@ -154,6 +172,20 @@ namespace ScreenshotManager.ViewModels {
         VisibleSearchResults = true;
         var tagName = SelectedSearchTagModel.Name;
         var models = ImageModelsManager.Models.Where(model => model.Tags.Contains(tagName));
+        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
+      }
+    }
+
+    private void ExecuteSearchAutoTag(object obj) {
+      if (SelectedSearchAutoTagModel == null) {
+        // Change ItemsSource to ImageModelsManager.Models
+        VisibleSearchResults = false;
+      } else {
+        // Change ItemsSource to SearchResultImageModels
+        VisibleSearchResults = true;
+        var tagName = SelectedSearchAutoTagModel.Name;
+        var fileNames = SettingsManager.AutoCategorizedTags[tagName];
+        var models = ImageModelsManager.Models.Where(model => fileNames.Contains(model.Filename));
         SearchResultImageModels = new ObservableCollection<ImageModel>(models);
       }
     }

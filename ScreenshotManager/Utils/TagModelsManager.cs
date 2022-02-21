@@ -16,6 +16,15 @@ namespace ScreenshotManager.Utils {
       }
     }
 
+    private static ObservableCollection<TagModel> _autoModels = new();
+    public static ObservableCollection<TagModel> AutoModels {
+      get => _autoModels;
+      private set {
+        _autoModels = value;
+        NotifyStaticPropertyChanged();
+      }
+    }
+
     public static void Initialize() {
       ImageModelsManager.StaticPropertyChanged += ImageModelsManager_StaticPropertyChanged;
     }
@@ -24,6 +33,7 @@ namespace ScreenshotManager.Utils {
       // FIXME: weird coding...
       if (ImageModelsManager.IsModelsAvailable) {
         Models = GetTagModelsSorted();
+        AutoModels = GetAutoTagModelsSorted();
       }
     }
 
@@ -48,6 +58,11 @@ namespace ScreenshotManager.Utils {
         .Distinct()
         .OrderBy(tag => tag)
         .Select(tag => new TagModel(tag)));
+
+    public static ObservableCollection<TagModel> GetAutoTagModelsSorted()
+      => new ObservableCollection<TagModel>(SettingsManager.AutoCategorizedTags.Keys
+        .OrderBy(name => name)
+        .Select(name => new TagModel(name)));
 
     public static ObservableSet<string> GetSelectedTags(ObservableSet<TagModel> models)
       => new ObservableSet<string>(models.Where(model => model.IsSelected).Select(model => model.Name));
