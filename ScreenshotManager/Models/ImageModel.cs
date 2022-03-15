@@ -12,7 +12,7 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
     [JsonIgnore]
-    public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
+    public ICommand CopyFilepathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyFilepathToClipboard());
     [JsonIgnore]
     public ICommand CopyFilenameToClipboardCommand => new AnotherCommandImplementation((obj) => CopyFilenameToClipboard());
     [JsonIgnore]
@@ -57,7 +57,7 @@ namespace ScreenshotManager.Models {
       Clipboard.SetImage(await Screenshot.LoadBitmapImageAsync(AbsolutePath));
     }
 
-    public void CopyPathToClipboard() {
+    public void CopyFilepathToClipboard() {
       Clipboard.SetText(AbsolutePath);
     }
 
