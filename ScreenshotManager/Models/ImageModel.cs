@@ -2,12 +2,10 @@
 using ScreenshotManager.Utils;
 using ScreenshotManager.Views;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
   public class ImageModel {
@@ -28,8 +26,6 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImageDialog());
 
-    [JsonIgnore]
-    public ImageSource ImageSource => Screenshot.LoadBitmapImage(AbsolutePath);
     [JsonIgnore]
     public ImageSource Thumbnail { get; }
     [JsonIgnore]
@@ -57,8 +53,8 @@ namespace ScreenshotManager.Models {
       this.Tags = tags;
     }
 
-    public void CopyImageToClipboard() {
-      Clipboard.SetImage(ImageSource as BitmapSource);
+    public async void CopyImageToClipboard() {
+      Clipboard.SetImage(await Screenshot.LoadBitmapImageAsync(AbsolutePath));
     }
 
     public void CopyPathToClipboard() {
@@ -92,7 +88,7 @@ namespace ScreenshotManager.Models {
     }
 
     public void ShowImageDialog() {
-      HandyControl.Controls.Dialog.Show(new ImageDialog(ImageSource));
+      HandyControl.Controls.Dialog.Show(new ImageDialog(AbsolutePath));
     }
 
     public void ShowEditTagsDialog() {

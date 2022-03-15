@@ -13,8 +13,7 @@
     <hc:SimplePanel>
       <Image Source="{Binding Image}"
              RenderOptions.BitmapScalingMode="HighQuality"
-             Margin="30">
-      </Image>
+             Margin="30" />
     </hc:SimplePanel>
   </Grid>
   <Border.InputBindings>
