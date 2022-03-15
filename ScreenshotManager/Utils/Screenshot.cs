@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Utils {
@@ -55,7 +54,7 @@ namespace ScreenshotManager.Utils {
     }
 
     public static string CreateFilename(DateTime dt) {
-      return $"{dt:yyyy-MM-dd_HH-mm-ss_ffff}.jpg";
+      return $"{dt:yyyy-MM-dd_HH-mm-ss_ffff}.png";
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using ScreenshotManager.Models;
 using ScreenshotManager.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -158,7 +159,7 @@ namespace ScreenshotManager.ViewModels {
         var bmp = SelectedScreen.Take();
         var filename = Screenshot.CreateFilename();
         var path = Path.Combine(SettingsManager.ScreenshotFolder, filename);
-        bmp.Save(path);
+        bmp.Save(path, ImageFormat.Png);
         return new ImageModel(path);
       });
     }
