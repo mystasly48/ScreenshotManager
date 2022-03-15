@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ScreenshotManager.Views"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
+        Background="Transparent"
         d:DesignHeight="450"
         d:DesignWidth="800">
   <Grid>
@@ -13,11 +14,11 @@
       <Image Source="{Binding Image}"
              RenderOptions.BitmapScalingMode="HighQuality"
              Margin="30">
-        <Image.InputBindings>
-          <MouseBinding Gesture="LeftClick"
-                        Command="hc:ControlCommands.Close" />
-        </Image.InputBindings>
       </Image>
     </hc:SimplePanel>
   </Grid>
+  <Border.InputBindings>
+    <MouseBinding Gesture="LeftClick"
+                  Command="hc:ControlCommands.Close" />
+  </Border.InputBindings>
 </Border>

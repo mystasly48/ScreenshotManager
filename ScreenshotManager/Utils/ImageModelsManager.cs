@@ -54,27 +54,17 @@ namespace ScreenshotManager.Utils {
         IsModelsAvailable = false;
         List<ImageModel> modelsFromJson = Load();
         string[] files = GetLocalImageFiles();
-        // Add to Models every 50 files
-        List<ImageModel> tempModels = new List<ImageModel>();
-        const int MODELS_COUNT = 50;
         foreach (var file in files) {
           var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
           if (matchedModel == null) {
             // newly added
             var model = new ImageModel(file);
-            tempModels.Add(model);
+            Application.Current.Dispatcher.Invoke(() => Add(model));
           } else {
             // already exists
             var model = new ImageModel(matchedModel.AbsolutePath, matchedModel.Tags);
-            tempModels.Add(model);
+            Application.Current.Dispatcher.Invoke(() => Add(model));
           }
-          if (tempModels.Count == MODELS_COUNT) {
-            Application.Current.Dispatcher.Invoke(() => AddAll(tempModels));
-            tempModels.Clear();
-          }
-        }
-        if (tempModels.Count > 0) {
-          Application.Current.Dispatcher.Invoke(() => AddAll(tempModels));
         }
         IsModelsAvailable = true;
         Save();

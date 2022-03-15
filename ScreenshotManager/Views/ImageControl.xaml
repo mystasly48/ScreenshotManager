@@ -11,7 +11,7 @@
              Width="320"
              Height="180">
   <Border BorderBrush="#5e9ed6">
-    <Image Source="{Binding ImageSource}"
+    <Image Source="{Binding Thumbnail}"
            Stretch="Uniform"
            RenderOptions.BitmapScalingMode="HighQuality">
       <Image.ContextMenu>
