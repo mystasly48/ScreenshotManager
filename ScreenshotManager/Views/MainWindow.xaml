@@ -8,7 +8,7 @@
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="Screenshot Manager"
+        Title="{Binding Path=(utils:SettingsManager.ProductTitle)}"
         Height="700"
         Width="1200"
         Background="Transparent"
