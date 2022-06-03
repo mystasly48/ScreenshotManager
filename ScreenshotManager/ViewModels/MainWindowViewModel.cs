@@ -198,8 +198,7 @@ namespace ScreenshotManager.ViewModels {
 
           // search by caption
           if (!string.IsNullOrEmpty(caption)) {
-            var modelsByCaption = ImageModelsManager.Models.Where(
-              model => model.AutoCaption.Contains(caption) || model.AutoCaptionKana.Contains(caption));
+            var modelsByCaption = SearchByCaptions(caption);
             models = models.Intersect(modelsByCaption);
           }
 
@@ -208,6 +207,17 @@ namespace ScreenshotManager.ViewModels {
         });
         SearchResultImageModels = result;
       }
+    }
+
+    private IEnumerable<ImageModel> SearchByCaptions(string query) {
+      var words = query.Split(new[] {' ', '　'});
+      var result = ImageModelsManager.Models.Select(x => x);
+      foreach (var word in words) {
+        var models = ImageModelsManager.Models.Where(
+              model => model.AutoCaption.Contains(word) || model.AutoCaptionKana.Contains(word));
+        result = result.Intersect(models);
+      }
+      return result;
     }
 
     private void ExecuteClosing(object obj) {
