@@ -115,15 +115,15 @@ namespace ScreenshotManager.Models {
 
     private void ProcessByAI() {
       if (FaceRecognitionResults == null) {
-        ExecuteFaceRecognitionAsync();
+        ExecuteFaceRecognition();
       }
       if (TextRecognitionResults == null) {
-        ExecuteTextRecognitionAsync();
+        ExecuteTextRecognition();
       }
     }
 
-    private async void ExecuteFaceRecognitionAsync() {
-      FaceRecognitionResults = await RecognitionAPI.FaceRecognitionAsync(AbsolutePath);
+    private void ExecuteFaceRecognition() {
+      FaceRecognitionResults = RecognitionAPI.FaceRecognition(AbsolutePath);
       PersonTags = new();
       foreach (var person in FaceRecognitionResults) {
         // reject under 50%
@@ -134,8 +134,8 @@ namespace ScreenshotManager.Models {
       }
     }
 
-    private async void ExecuteTextRecognitionAsync() {
-      TextRecognitionResults = await RecognitionAPI.TextRecognitionAsync(AbsolutePath);
+    private void ExecuteTextRecognition() {
+      TextRecognitionResults = RecognitionAPI.TextRecognition(AbsolutePath);
       AutoCaption = "";
       AutoCaptionKana = "";
       foreach (var caption in TextRecognitionResults) {
