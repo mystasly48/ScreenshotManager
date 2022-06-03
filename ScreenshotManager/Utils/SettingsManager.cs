@@ -10,7 +10,7 @@ using System.Windows.Input;
 namespace ScreenshotManager.Utils {
   public static class SettingsManager {
 #if DEBUG
-    public static string ProductName => "ScrenshotManagerDebug";
+    public static string ProductName => "ScreenshotManagerDebug";
 #else
     public static string ProductName => "ScreenshotManager";
 #endif
