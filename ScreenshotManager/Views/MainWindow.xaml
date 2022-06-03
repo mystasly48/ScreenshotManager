@@ -21,86 +21,113 @@
   </i:Interaction.Triggers>
   <Grid Margin="10">
     <Grid VerticalAlignment="Top"
-          Height="50">
-      <StackPanel Orientation="Horizontal">
-        <Button Content="Take"
+          Height="100">
+      <StackPanel Orientation="Vertical" Margin="0, 0, 20, 0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <Button Content="Take"
                 ToolTip="Take a screenshot (PrtScr)"
                 Command="{Binding TakeOneCommand}"
+                Height="30"
                 Width="50"
                 Margin="10" />
-        <Button Content="Burst"
-                ToolTip="Take burst screenshots"
-                Command="{Binding TakeContinuousCommand}"
-                Width="50"
-                Margin="10" />
-        <ComboBox ItemsSource="{Binding AllScreens}"
-                  SelectedIndex="{Binding SelectedScreenIndex}"
-                  DisplayMemberPath="IndexedName"
-                  ToolTip="Select a screen to take screenshots"
-                  Width="120"
-                  Margin="10"
-                  VerticalContentAlignment="Center" />
-        <hc:NumericUpDown Value="{Binding Interval}"
-                          ToolTip="Set the interval to take burst screenshots"
-                          Increment="100"
-                          Minimum="100"
-                          Maximum="10000"
-                          Width="80"
-                          Margin="10"
-                          HorizontalContentAlignment="Right"
-                          VerticalContentAlignment="Center" />
-        <hc:NumericUpDown Value="{Binding Seconds}"
-                          ToolTip="Set the continous seconds to take burst screenshots"
-                          Increment="1"
-                          Minimum="1"
-                          Maximum="10"
-                          Width="80"
-                          Margin="10"
-                          HorizontalContentAlignment="Right"
-                          VerticalContentAlignment="Center" />
-        <TextBlock Text="{Binding Path=(utils:ImageModelsManager.Models).Count, StringFormat={}{0} images}"
-                   ToolTip="Total loaded images"
-                   Margin="10"
-                   Width="100"
-                   Style="{DynamicResource TextBlockBaseStyle}"
-                   HorizontalAlignment="Right" />
-        <ComboBox SelectedIndex="{Binding SelectedSearchTagIndex}"
-                  DisplayMemberPath="Name"
+          <Button Content="Burst"
+                  ToolTip="Take burst screenshots"
+                  Command="{Binding TakeContinuousCommand}"
+                  Height="30"
+                  Width="50"
+                  Margin="10" />
+          <ComboBox ItemsSource="{Binding AllScreens}"
+                    SelectedIndex="{Binding SelectedScreenIndex}"
+                    DisplayMemberPath="IndexedName"
+                    ToolTip="Select a screen to take screenshots"
+                    Width="120"
+                    Height="30"
+                    Margin="10"
+                    VerticalContentAlignment="Center" />
+          <hc:NumericUpDown Value="{Binding Interval}"
+                            ToolTip="Set the interval to take burst screenshots"
+                            Increment="100"
+                            Minimum="100"
+                            Maximum="10000"
+                            Height="30"
+                            Width="80"
+                            Margin="10"
+                            HorizontalContentAlignment="Right"
+                            VerticalContentAlignment="Center" />
+          <hc:NumericUpDown Value="{Binding Seconds}"
+                            ToolTip="Set the continous seconds to take burst screenshots"
+                            Increment="1"
+                            Minimum="1"
+                            Maximum="10"
+                            Height="30"
+                            Width="80"
+                            Margin="10"
+                            HorizontalContentAlignment="Right"
+                            VerticalContentAlignment="Center" />
+          <TextBlock Text="{Binding Path=(utils:ImageModelsManager.Models).Count, StringFormat={}{0} images}"
+                     ToolTip="Total loaded images"
+                     Margin="10"
+                     Height="30"
+                     Width="100"
+                     Style="{DynamicResource TextBlockBaseStyle}"
+                     HorizontalAlignment="Right" />
+          <ComboBox SelectedIndex="{Binding SelectedSearchTagIndex}"
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                    ToolTip="Select a tag to search"
+                    Height="30"
+                    Margin="10"
+                    Width="180">
+            <ComboBox.ItemsSource>
+              <CompositeCollection>
+                <ListBoxItem Content="Please select" />
+                <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.TagModels)}" />
+              </CompositeCollection>
+            </ComboBox.ItemsSource>
+          </ComboBox>
+          <Button Content="Search ①"
+                  Command="{Binding SearchTagCommand}"
                   IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                  ToolTip="Select a tag to search"
-                  Margin="10"
-                  Width="180">
-          <ComboBox.ItemsSource>
-            <CompositeCollection>
-              <ListBoxItem Content="Please select" />
-              <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.Models)}" />
-            </CompositeCollection>
-          </ComboBox.ItemsSource>
-        </ComboBox>
-        <Button Content="Search ①"
-                Command="{Binding SearchTagCommand}"
-                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                ToolTip="Execute search by a selected tag"/>
-        <ComboBox SelectedIndex="{Binding SelectedSearchAutoTagIndex}"
-                  DisplayMemberPath="Name"
+                  ToolTip="Execute search by a selected tag"
+                  Height="30"
+                  Width="80"/>
+          <ComboBox SelectedIndex="{Binding SelectedSearchPersonTagIndex}"
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                    ToolTip="Select a tag to search"
+                    Height="30"
+                    Margin="10"
+                    Width="180">
+            <ComboBox.ItemsSource>
+              <CompositeCollection>
+                <ListBoxItem Content="Please select" />
+                <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.PersonTagModels)}" />
+              </CompositeCollection>
+            </ComboBox.ItemsSource>
+          </ComboBox>
+          <Button Content="Search ②"
+                  Command="{Binding SearchPersonTagCommand}"
                   IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                  ToolTip="Select a tag to search"
-                  Margin="10"
-                  Width="180">
-          <ComboBox.ItemsSource>
-            <CompositeCollection>
-              <ListBoxItem Content="Please select" />
-              <CollectionContainer Collection="{Binding Path=(utils:TagModelsManager.AutoModels)}" />
-            </CompositeCollection>
-          </ComboBox.ItemsSource>
-        </ComboBox>
-        <Button Content="Search ②"
-                Command="{Binding SearchAutoTagCommand}"
-                IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                ToolTip="Execute search by a selected tag" />
+                  ToolTip="Execute search by a selected person"
+                  Height="30"
+                  Width="80"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <hc:TextBox Name="TagTextBox"
+                      Text="{Binding CaptionSearchQuery}"
+                      IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                      Margin="10"
+                      Width="460" />
+          <Button Content="Search ③"
+                  Command="{Binding SearchCaptionCommand}"
+                  IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                  ToolTip="Execute search by a caption"
+                  Height="30"
+                  Width="80" />
+        </StackPanel>
       </StackPanel>
     </Grid>
-    <Grid Margin="0, 50, 0, 0">
+    <Grid Margin="0, 100, 0, 0">
       <hc:ScrollViewer Name="ImageModelsScrollViewer"
                        VerticalScrollBarVisibility="Auto"
                        HorizontalScrollBarVisibility="Disabled"

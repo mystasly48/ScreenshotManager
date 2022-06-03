@@ -15,7 +15,8 @@ namespace ScreenshotManager.ViewModels {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
     public ICommand SearchTagCommand => new AnotherCommandImplementation(ExecuteSearchTag);
-    public ICommand SearchAutoTagCommand => new AnotherCommandImplementation(ExecuteSearchAutoTag);
+    public ICommand SearchPersonTagCommand => new AnotherCommandImplementation(ExecuteSearchPersonTag);
+    public ICommand SearchCaptionCommand => new AnotherCommandImplementation(ExecuteSearcByCaption);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
@@ -76,26 +77,32 @@ namespace ScreenshotManager.ViewModels {
         if (SelectedSearchTagIndex == 0) {
           return null;
         } else {
-          return TagModelsManager.Models[SelectedSearchTagIndex - 1]; 
+          return TagModelsManager.TagModels[SelectedSearchTagIndex - 1]; 
         }
       }
     }
 
-    private int _selectedSearchAutoTagIndex;
-    public int SelectedSearchAutoTagIndex {
-      get => _selectedSearchAutoTagIndex;
-      set => SetProperty(ref _selectedSearchAutoTagIndex, value);
+    private int _selectedSearchPersonTagIndex;
+    public int SelectedSearchPersonTagIndex {
+      get => _selectedSearchPersonTagIndex;
+      set => SetProperty(ref _selectedSearchPersonTagIndex, value);
     }
 
-    public TagModel SelectedSearchAutoTagModel {
+    public TagModel SelectedSearchPersonTagModel {
       get {
         // consider that index 0 is "please select"
-        if (SelectedSearchAutoTagIndex == 0) {
+        if (SelectedSearchPersonTagIndex == 0) {
           return null;
         } else {
-          return TagModelsManager.AutoModels[SelectedSearchAutoTagIndex - 1];
+          return TagModelsManager.PersonTagModels[SelectedSearchPersonTagIndex - 1];
         }
       }
+    }
+
+    private string _captionSearchQuery;
+    public string CaptionSearchQuery {
+      get => _captionSearchQuery;
+      set => SetProperty(ref _captionSearchQuery, value);
     }
 
     private ObservableCollection<ImageModel> _searchResutImageModels;
@@ -177,16 +184,29 @@ namespace ScreenshotManager.ViewModels {
       }
     }
 
-    private void ExecuteSearchAutoTag(object obj) {
-      if (SelectedSearchAutoTagModel == null) {
+    private void ExecuteSearchPersonTag(object obj) {
+      if (SelectedSearchPersonTagModel == null) {
         // Change ItemsSource to ImageModelsManager.Models
         VisibleSearchResults = false;
       } else {
         // Change ItemsSource to SearchResultImageModels
         VisibleSearchResults = true;
-        var tagName = SelectedSearchAutoTagModel.Name;
-        var fileNames = SettingsManager.AutoCategorizedTags[tagName];
-        var models = ImageModelsManager.Models.Where(model => fileNames.Contains(model.Filename));
+        var tagName = SelectedSearchPersonTagModel.Name;
+        var models = ImageModelsManager.Models.Where(model => model.PersonTags.Contains(tagName));
+        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
+      }
+    }
+
+    private void ExecuteSearcByCaption(object obj) {
+      var caption = CaptionSearchQuery.Trim();
+      if (string.IsNullOrEmpty(caption)) {
+        // Change ItemsSource to ImageModelsManager.Models
+        VisibleSearchResults = false;
+      } else {
+        // Change ItemsSource to SearchResultImageModels
+        VisibleSearchResults = true;
+        var models = ImageModelsManager.Models.Where(
+          model => model.AutoCaption.Contains(caption) || model.AutoCaptionKana.Contains(caption));
         SearchResultImageModels = new ObservableCollection<ImageModel>(models);
       }
     }

@@ -7,20 +7,20 @@ using System.Runtime.CompilerServices;
 
 namespace ScreenshotManager.Utils {
   public static class TagModelsManager {
-    private static ObservableCollection<TagModel> _models = new();
-    public static ObservableCollection<TagModel> Models {
-      get => _models;
+    private static ObservableCollection<TagModel> _tagModels = new();
+    public static ObservableCollection<TagModel> TagModels {
+      get => _tagModels;
       private set {
-        _models = value;
+        _tagModels = value;
         NotifyStaticPropertyChanged();
       }
     }
 
-    private static ObservableCollection<TagModel> _autoModels = new();
-    public static ObservableCollection<TagModel> AutoModels {
-      get => _autoModels;
+    private static ObservableCollection<TagModel> _personTagModels = new();
+    public static ObservableCollection<TagModel> PersonTagModels {
+      get => _personTagModels;
       private set {
-        _autoModels = value;
+        _personTagModels = value;
         NotifyStaticPropertyChanged();
       }
     }
@@ -32,8 +32,8 @@ namespace ScreenshotManager.Utils {
     private static void ImageModelsManager_StaticPropertyChanged(object sender, PropertyChangedEventArgs e) {
       // FIXME: weird coding...
       if (ImageModelsManager.IsModelsAvailable) {
-        Models = GetTagModelsSorted();
-        AutoModels = GetAutoTagModelsSorted();
+        TagModels = GetTagModelsSorted();
+        PersonTagModels = GetPersonTagModelsSorted();
       }
     }
 
@@ -53,19 +53,21 @@ namespace ScreenshotManager.Utils {
     }
 
     public static ObservableCollection<TagModel> GetTagModelsSorted()
-      => new ObservableCollection<TagModel>(ImageModelsManager.Models
+      => new(ImageModelsManager.Models
         .SelectMany(model => model.Tags)
         .Distinct()
         .OrderBy(tag => tag)
         .Select(tag => new TagModel(tag)));
 
-    public static ObservableCollection<TagModel> GetAutoTagModelsSorted()
-      => new ObservableCollection<TagModel>(SettingsManager.AutoCategorizedTags.Keys
-        .OrderBy(name => name)
-        .Select(name => new TagModel(name)));
+    public static ObservableCollection<TagModel> GetPersonTagModelsSorted()
+      => new(ImageModelsManager.Models
+        .SelectMany(model => model.PersonTags)
+        .Distinct()
+        .OrderBy(tag => tag)
+        .Select(tag => new TagModel(tag)));
 
     public static ObservableSet<string> GetSelectedTags(ObservableSet<TagModel> models)
-      => new ObservableSet<string>(models.Where(model => model.IsSelected).Select(model => model.Name));
+      => new(models.Where(model => model.IsSelected).Select(model => model.Name));
 
     public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
     private static void NotifyStaticPropertyChanged([CallerMemberName] string propertyName = "") {

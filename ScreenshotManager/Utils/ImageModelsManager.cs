@@ -62,7 +62,7 @@ namespace ScreenshotManager.Utils {
             Application.Current.Dispatcher.Invoke(() => Add(model));
           } else {
             // already exists
-            var model = new ImageModel(matchedModel.AbsolutePath, matchedModel.Tags);
+            var model = new ImageModel(matchedModel);
             Application.Current.Dispatcher.Invoke(() => Add(model));
           }
         }
