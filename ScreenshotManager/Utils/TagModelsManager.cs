@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace ScreenshotManager.Utils {
   public static class TagModelsManager {
@@ -29,11 +30,11 @@ namespace ScreenshotManager.Utils {
       ImageModelsManager.StaticPropertyChanged += ImageModelsManager_StaticPropertyChanged;
     }
 
-    private static void ImageModelsManager_StaticPropertyChanged(object sender, PropertyChangedEventArgs e) {
+    private static async void ImageModelsManager_StaticPropertyChanged(object sender, PropertyChangedEventArgs e) {
       // FIXME: weird coding...
       if (ImageModelsManager.IsModelsAvailable) {
-        TagModels = GetTagModelsSorted();
-        PersonTagModels = GetPersonTagModelsSorted();
+        TagModels = await GetTagModelsSortedAsync();
+        PersonTagModels = await GetPersonTagModelsSortedAsync();
       }
     }
 
@@ -52,19 +53,25 @@ namespace ScreenshotManager.Utils {
         }));
     }
 
-    public static ObservableCollection<TagModel> GetTagModelsSorted()
-      => new(ImageModelsManager.Models
-        .SelectMany(model => model.Tags)
-        .Distinct()
-        .OrderBy(tag => tag)
-        .Select(tag => new TagModel(tag)));
+    public static async Task<ObservableCollection<TagModel>> GetTagModelsSortedAsync() {
+      return await Task.Run(() => {
+        return new ObservableCollection<TagModel>(ImageModelsManager.Models
+          .SelectMany(model => model.Tags)
+          .Distinct()
+          .OrderBy(tag => tag)
+          .Select(tag => new TagModel(tag)));
+      });
+    }
 
-    public static ObservableCollection<TagModel> GetPersonTagModelsSorted()
-      => new(ImageModelsManager.Models
-        .SelectMany(model => model.PersonTags)
-        .Distinct()
-        .OrderBy(tag => tag)
-        .Select(tag => new TagModel(tag)));
+    public static async Task<ObservableCollection<TagModel>> GetPersonTagModelsSortedAsync() {
+      return await Task.Run(() => {
+        return new ObservableCollection<TagModel>(ImageModelsManager.Models
+          .SelectMany(model => model.PersonTags)
+          .Distinct()
+          .OrderBy(tag => tag)
+          .Select(tag => new TagModel(tag)));
+      });
+    }
 
     public static ObservableSet<string> GetSelectedTags(ObservableSet<TagModel> models)
       => new(models.Where(model => model.IsSelected).Select(model => model.Name));
