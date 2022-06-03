@@ -14,9 +14,7 @@ namespace ScreenshotManager.ViewModels {
   public class MainWindowViewModel : Observable {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
-    public ICommand SearchTagCommand => new AnotherCommandImplementation(ExecuteSearchTag);
-    public ICommand SearchPersonTagCommand => new AnotherCommandImplementation(ExecuteSearchPersonTag);
-    public ICommand SearchCaptionCommand => new AnotherCommandImplementation(ExecuteSearcByCaption);
+    public ICommand SearchCommand => new AnotherCommandImplementation(ExecuteSearch);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
@@ -171,43 +169,44 @@ namespace ScreenshotManager.ViewModels {
       });
     }
 
-    private void ExecuteSearchTag(object obj) {
-      if (SelectedSearchTagModel == null) {
+    private async void ExecuteSearch(object obj) {
+      var tagName = SelectedSearchTagModel?.Name;
+      var personName = SelectedSearchPersonTagModel?.Name;
+      var caption = CaptionSearchQuery?.Trim();
+      if (string.IsNullOrEmpty(tagName) && string.IsNullOrEmpty(personName) && string.IsNullOrEmpty(caption)) {
+        // Reset search query.
         // Change ItemsSource to ImageModelsManager.Models
         VisibleSearchResults = false;
       } else {
+        // Merge the search results.
         // Change ItemsSource to SearchResultImageModels
         VisibleSearchResults = true;
-        var tagName = SelectedSearchTagModel.Name;
-        var models = ImageModelsManager.Models.Where(model => model.Tags.Contains(tagName));
-        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
-      }
-    }
+        var result = await Task.Run(() => {
+          var models = ImageModelsManager.Models.Select(x => x);
 
-    private void ExecuteSearchPersonTag(object obj) {
-      if (SelectedSearchPersonTagModel == null) {
-        // Change ItemsSource to ImageModelsManager.Models
-        VisibleSearchResults = false;
-      } else {
-        // Change ItemsSource to SearchResultImageModels
-        VisibleSearchResults = true;
-        var tagName = SelectedSearchPersonTagModel.Name;
-        var models = ImageModelsManager.Models.Where(model => model.PersonTags.Contains(tagName));
-        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
-      }
-    }
+          // search by tag
+          if (!string.IsNullOrEmpty(tagName)) {
+            var modelsByTag = ImageModelsManager.Models.Where(model => model.Tags.Contains(tagName));
+            models = models.Intersect(modelsByTag);
+          }
 
-    private void ExecuteSearcByCaption(object obj) {
-      var caption = CaptionSearchQuery.Trim();
-      if (string.IsNullOrEmpty(caption)) {
-        // Change ItemsSource to ImageModelsManager.Models
-        VisibleSearchResults = false;
-      } else {
-        // Change ItemsSource to SearchResultImageModels
-        VisibleSearchResults = true;
-        var models = ImageModelsManager.Models.Where(
-          model => model.AutoCaption.Contains(caption) || model.AutoCaptionKana.Contains(caption));
-        SearchResultImageModels = new ObservableCollection<ImageModel>(models);
+          // search by person
+          if (!string.IsNullOrEmpty(personName)) {
+            var modelsByPerson = ImageModelsManager.Models.Where(model => model.PersonTags.Contains(personName));
+            models = models.Intersect(modelsByPerson);
+          }
+
+          // search by caption
+          if (!string.IsNullOrEmpty(caption)) {
+            var modelsByCaption = ImageModelsManager.Models.Where(
+              model => model.AutoCaption.Contains(caption) || model.AutoCaptionKana.Contains(caption));
+            models = models.Intersect(modelsByCaption);
+          }
+
+          // convert
+          return new ObservableCollection<ImageModel>(models);
+        });
+        SearchResultImageModels = result;
       }
     }
 
