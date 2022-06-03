@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ScreenshotManager.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -21,8 +20,6 @@ namespace ScreenshotManager.Utils {
     public static string ImageModelsSettingFilePath => Path.Combine(SettingsFolder, ImageModelsSettingFilename);
     public static string ApplicationSettingFilename => "Application.json";
     public static string ApplicationSettingFilePath => Path.Combine(SettingsFolder, ApplicationSettingFilename);
-    public static string AutoCategorizedTagsFilename => "AutoCategorizedTags.json";
-    public static string AutoCategorizedTagsFilePath => Path.Combine(SettingsFolder, AutoCategorizedTagsFilename);
 
     public static int SelectedScreenIndex {
       get => _model.SelectedScreenIndex;
@@ -57,9 +54,6 @@ namespace ScreenshotManager.Utils {
       set => _model.GlobalHotKey = value;
     }
 
-    private static Dictionary<string, List<string>> _autoTags;
-    public static Dictionary<string, List<string>> AutoCategorizedTags => _autoTags;
-
     private static ApplicationSettingModel _model;
 
     public static void Initialize() {
@@ -68,7 +62,6 @@ namespace ScreenshotManager.Utils {
     }
 
     private static void Load() {
-      _autoTags = LoadAutoTags();
       if (!File.Exists(ApplicationSettingFilePath)) {
         _model = new ApplicationSettingModel();
         Save();
@@ -85,40 +78,6 @@ namespace ScreenshotManager.Utils {
         var json = JsonConvert.SerializeObject(_model, Formatting.Indented);
         writer.WriteLine(json);
       }
-    }
-
-    private static string DecodeName(string encodedName) {
-      var bytes = Encoding.UTF8.GetBytes(encodedName);
-      var decodedName = Encoding.UTF8.GetString(bytes);
-      return decodedName;
-    }
-
-    public static Dictionary<string, List<string>> LoadAutoTags() {
-      var dict = new Dictionary<string, List<string>>();
-      if (!File.Exists(AutoCategorizedTagsFilePath)) {
-        return dict;
-      }
-      using (var reader = new StreamReader(AutoCategorizedTagsFilePath, Encoding.UTF8)) {
-        var json = reader.ReadToEnd();
-        dynamic raw = JsonConvert.DeserializeObject(json);
-        foreach (var image in raw) {
-          string filename = image[0];
-          foreach (var result in image[1]) {
-            double confidence = result[1];
-            // reject under 50% prob
-            if (confidence < 0.5) {
-              continue;
-            }
-            string name = result[0];
-
-            if (!dict.ContainsKey(name)) {
-              dict[name] = new List<string>();
-            }
-            dict[name].Add(filename);
-          }
-        }
-      }
-      return dict;
     }
   }
 }
