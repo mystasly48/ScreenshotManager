@@ -1,20 +1,19 @@
 ﻿using Newtonsoft.Json;
 using ScreenshotManager.Utils;
 using ScreenshotManager.Views;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
   public class ImageModel : Observable {
     [JsonIgnore]
     public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
     [JsonIgnore]
-    public ICommand CopyPathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyPathToClipboard());
+    public ICommand CopyFilepathToClipboardCommand => new AnotherCommandImplementation((obj) => CopyFilepathToClipboard());
     [JsonIgnore]
     public ICommand CopyFilenameToClipboardCommand => new AnotherCommandImplementation((obj) => CopyFilenameToClipboard());
     [JsonIgnore]
@@ -28,8 +27,6 @@ namespace ScreenshotManager.Models {
     [JsonIgnore]
     public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImageDialog());
 
-    [JsonIgnore]
-    public ImageSource ImageSource => Screenshot.LoadBitmapImage(AbsolutePath);
     [JsonIgnore]
     public ImageSource Thumbnail { get; }
     [JsonIgnore]
@@ -46,6 +43,16 @@ namespace ScreenshotManager.Models {
     }
     [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
+    [JsonProperty]
+    public ObservableSet<string> PersonTags { get; private set; } = new();
+    [JsonProperty]
+    public string AutoCaption { get; private set; }
+    [JsonProperty]
+    public string AutoCaptionKana { get; private set; }
+    [JsonProperty]
+    public List<FaceRecognitionResponse> FaceRecognitionResults { get; private set; }
+    [JsonProperty]
+    public List<TextRecognitionResponse> TextRecognitionResults { get; private set; }
 
     const int THUMBNAIL_WIDTH = 320;
     const int THUMBNAIL_HEIGHT = 180;
@@ -55,19 +62,26 @@ namespace ScreenshotManager.Models {
     public ImageModel(string path) {
       this.Thumbnail = Screenshot.LoadThumbnail(path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = path;
+      ProcessByAI();
     }
 
-    public ImageModel(string path, ObservableSet<string> tags) {
-      this.Thumbnail = Screenshot.LoadThumbnail(path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-      this.AbsolutePath = path;
-      this.Tags = tags;
+    public ImageModel(ImageModel _model) {
+      this.Thumbnail = Screenshot.LoadThumbnail(_model.AbsolutePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+      this.AbsolutePath = _model.AbsolutePath;
+      this.Tags = _model.Tags;
+      this.PersonTags = _model.PersonTags;
+      this.AutoCaption = _model.AutoCaption;
+      this.AutoCaptionKana = _model.AutoCaptionKana;
+      this.FaceRecognitionResults = _model.FaceRecognitionResults;
+      this.TextRecognitionResults = _model.TextRecognitionResults;
+      ProcessByAI();
     }
 
-    public void CopyImageToClipboard() {
-      Clipboard.SetImage(ImageSource as BitmapSource);
+    public async void CopyImageToClipboard() {
+      Clipboard.SetImage(await Screenshot.LoadBitmapImageAsync(AbsolutePath));
     }
 
-    public void CopyPathToClipboard() {
+    public void CopyFilepathToClipboard() {
       Clipboard.SetText(AbsolutePath);
     }
 
@@ -98,11 +112,42 @@ namespace ScreenshotManager.Models {
     }
 
     public void ShowImageDialog() {
-      HandyControl.Controls.Dialog.Show(new ImageDialog(ImageSource));
+      HandyControl.Controls.Dialog.Show(new ImageDialog(AbsolutePath));
     }
 
     public void ShowEditTagsDialog() {
       HandyControl.Controls.Dialog.Show(new TagsDialog(this));
+    }
+
+    private void ProcessByAI() {
+      if (FaceRecognitionResults == null) {
+        ExecuteFaceRecognition();
+      }
+      if (TextRecognitionResults == null) {
+        ExecuteTextRecognition();
+      }
+    }
+
+    private void ExecuteFaceRecognition() {
+      FaceRecognitionResults = RecognitionAPI.FaceRecognition(AbsolutePath);
+      PersonTags = new();
+      foreach (var person in FaceRecognitionResults) {
+        // reject under 50%
+        if (person.Confidence < 0.5) {
+          continue;
+        }
+        PersonTags.Add(person.Name);
+      }
+    }
+
+    private void ExecuteTextRecognition() {
+      TextRecognitionResults = RecognitionAPI.TextRecognition(AbsolutePath);
+      AutoCaption = "";
+      AutoCaptionKana = "";
+      foreach (var caption in TextRecognitionResults) {
+        AutoCaption += caption.Text;
+        AutoCaptionKana += caption.Kana;
+      }
     }
   }
 }

@@ -19,8 +19,8 @@
           <MenuItem Header="Copy the image"
                     Command="{Binding CopyImageToClipboardCommand}"
                     CommandParameter="{Binding}" />
-          <MenuItem Header="Copy the file path"
-                    Command="{Binding CopyPathToClipboardCommand}" />
+          <MenuItem Header="Copy the filepath"
+                    Command="{Binding CopyFilepathToClipboardCommand}" />
           <MenuItem Header="Copy the filename"
                     Command="{Binding CopyFilenameToClipboardCommand}" />
           <MenuItem Header="Edit tags"

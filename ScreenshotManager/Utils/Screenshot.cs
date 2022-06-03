@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
@@ -53,7 +54,7 @@ namespace ScreenshotManager.Utils {
     }
 
     public static string CreateFilename(DateTime dt) {
-      return $"{dt:yyyy-MM-dd_HH-mm-ss_ffff}.jpg";
+      return $"{dt:yyyy-MM-dd_HH-mm-ss_ffff}.png";
     }
 
     /// <summary>
@@ -69,6 +70,15 @@ namespace ScreenshotManager.Utils {
       bitmapImage.EndInit();
       bitmapImage.Freeze();
       return bitmapImage;
+    }
+
+    /// <summary>
+    /// 非同期で画像のファイルパスから BitmapImage を読み込む
+    /// </summary>
+    /// <param name="url">画像のファイルパス</param>
+    /// <returns>Task<BitmapImage></BitmapImage></returns>
+    public static Task<BitmapImage> LoadBitmapImageAsync(string url) {
+      return Task.Run(() => LoadBitmapImage(url));
     }
 
     /// <summary>

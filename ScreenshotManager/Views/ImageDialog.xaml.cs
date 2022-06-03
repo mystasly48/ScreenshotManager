@@ -1,13 +1,10 @@
-﻿using System.Windows.Media;
+﻿using ScreenshotManager.ViewModels;
 
 namespace ScreenshotManager.Views {
   public partial class ImageDialog {
-    public ImageSource Image { get; }
-
-    public ImageDialog(ImageSource image) {
+    public ImageDialog(string image_absolute_path) {
       InitializeComponent();
-      this.DataContext = this;
-      this.Image = image;
+      this.DataContext = new ImageDialogViewModel(image_absolute_path);
     }
   }
 }
