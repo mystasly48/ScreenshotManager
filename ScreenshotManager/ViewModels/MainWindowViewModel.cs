@@ -15,6 +15,7 @@ namespace ScreenshotManager.ViewModels {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
     public ICommand SearchTagCommand => new AnotherCommandImplementation(ExecuteSearchTag);
+    public ICommand ImageModelSelectCommand => new AnotherCommandImplementation(ExecuteImageModelSelection);
     public ICommand SearchPersonTagCommand => new AnotherCommandImplementation(ExecuteSearchPersonTag);
     public ICommand SearchCaptionCommand => new AnotherCommandImplementation(ExecuteSearcByCaption);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
@@ -181,6 +182,15 @@ namespace ScreenshotManager.ViewModels {
         var tagName = SelectedSearchTagModel.Name;
         var models = ImageModelsManager.Models.Where(model => model.Tags.Contains(tagName));
         SearchResultImageModels = new ObservableCollection<ImageModel>(models);
+      }
+    }
+
+    private void ExecuteImageModelSelection(object obj) {
+      System.Diagnostics.Debug.WriteLine("MainWindowViewModel: ImageModelSelectCommand");
+      System.Diagnostics.Debug.WriteLine(obj.GetType());
+      System.Diagnostics.Debug.WriteLine(obj);
+      if (obj is ImageModel model) {
+        model.IsSelected = !model.IsSelected;
       }
     }
 

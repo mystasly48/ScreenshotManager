@@ -14,6 +14,12 @@ namespace ScreenshotManager.Utils {
     public static string ProductName => "ScreenshotManager";
 #endif
 
+#if DEBUG
+    public static string ProductTitle => "Screenshot Manager - Debug";
+#else
+    public static string ProductTitle => "Screenshot Manager";
+#endif
+
     public static string DefaultScreenshotFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), ProductName);
     public static string SettingsFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), ProductName);
     public static string ImageModelsSettingFilename => "Images.json";

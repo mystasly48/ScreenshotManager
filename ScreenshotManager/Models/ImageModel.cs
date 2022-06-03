@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ScreenshotManager.Models {
-  public class ImageModel {
+  public class ImageModel : Observable {
     [JsonIgnore]
     public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
     [JsonIgnore]
@@ -35,6 +35,12 @@ namespace ScreenshotManager.Models {
     public string Filename => Path.GetFileName(AbsolutePath);
     [JsonProperty]
     public string AbsolutePath { get; private set; }
+    private bool _isSelected;
+    [JsonIgnore]
+    public bool IsSelected {
+      get => _isSelected;
+      set => SetProperty(ref _isSelected, value);
+    }
     [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
     [JsonProperty]
