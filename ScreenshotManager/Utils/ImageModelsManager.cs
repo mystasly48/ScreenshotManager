@@ -52,8 +52,8 @@ namespace ScreenshotManager.Utils {
     public async static void UpdateImageModelsToLocalAsync() {
       await Task.Run(async () => {
         IsModelsAvailable = false;
-        List<ImageModel> modelsFromJson = Load();
-        string[] files = GetLocalImageFiles();
+        var modelsFromJson = Load();
+        var files = GetLocalImageFiles();
         foreach (var file in files) {
           await Task.Run(() => {
             var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
@@ -73,22 +73,22 @@ namespace ScreenshotManager.Utils {
       });
     }
 
-    public static string[] GetLocalImageFiles() {
-      List<string> result = new();
+    public static IEnumerable<string> GetLocalImageFiles() {
+      var result = Enumerable.Empty<string>();
       foreach (var extension in AcceptedImageExtensions) {
-        result.AddRange(Directory.GetFiles(SettingsManager.ScreenshotFolder, $"*{extension}").Where(file => file.EndsWith(extension)));
+        result = result.Union(Directory.GetFiles(SettingsManager.ScreenshotFolder, $"*{extension}").Where(file => file.EndsWith(extension)));
       }
-      return result.OrderBy(x => x).ToArray();
+      return result.OrderBy(x => x);
     }
 
     // Note: ImageSource is dead, thus you need to re-instantiate it using AbsolutePath.
-    private static List<ImageModel> Load() {
+    private static IEnumerable<ImageModel> Load() {
       if (!File.Exists(SettingsManager.ImageModelsSettingFilePath)) {
-        return new List<ImageModel>();
+        return Enumerable.Empty<ImageModel>();
       }
       using (var reader = new StreamReader(SettingsManager.ImageModelsSettingFilePath, Encoding.UTF8)) {
         var json = reader.ReadToEnd();
-        var modelsFromJson = JsonConvert.DeserializeObject<List<ImageModel>>(json);
+        var modelsFromJson = JsonConvert.DeserializeObject<IEnumerable<ImageModel>>(json);
         return modelsFromJson;
       }
     }
