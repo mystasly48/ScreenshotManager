@@ -4,6 +4,7 @@ using ScreenshotManager.Views;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -47,6 +48,14 @@ namespace ScreenshotManager.Models {
     public List<FaceRecognitionResponse> FaceRecognitionResults { get; private set; }
     [JsonProperty]
     public List<TextRecognitionResponse> TextRecognitionResults { get; private set; }
+    [JsonIgnore]
+    public string ToolTip {
+      get {
+        string personTagsStr = string.Join(",", PersonTags);
+        string captionStr = string.Join("\n", TextRecognitionResults.Select(x => x.Text));
+        return $"{{{personTagsStr}}}\n{captionStr}";
+      }
+    }
 
     const int THUMBNAIL_WIDTH = 320;
     const int THUMBNAIL_HEIGHT = 180;

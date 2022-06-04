@@ -11,6 +11,7 @@
              Width="320"
              Height="180">
   <Image Source="{Binding Thumbnail}"
+         ToolTip="{Binding ToolTip}"
          Stretch="Uniform"
          RenderOptions.BitmapScalingMode="HighQuality">
     <Image.ContextMenu>
