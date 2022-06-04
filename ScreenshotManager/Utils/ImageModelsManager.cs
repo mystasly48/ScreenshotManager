@@ -50,21 +50,23 @@ namespace ScreenshotManager.Utils {
 
     // FIXME: Crash here when you close the app while this is running
     public async static void UpdateImageModelsToLocalAsync() {
-      await Task.Run(() => {
+      await Task.Run(async () => {
         IsModelsAvailable = false;
         List<ImageModel> modelsFromJson = Load();
         string[] files = GetLocalImageFiles();
         foreach (var file in files) {
-          var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
-          if (matchedModel == null) {
-            // newly added
-            var model = new ImageModel(file);
-            Application.Current.Dispatcher.Invoke(() => Add(model));
-          } else {
-            // already exists
-            var model = new ImageModel(matchedModel);
-            Application.Current.Dispatcher.Invoke(() => Add(model));
-          }
+          await Task.Run(() => {
+            var matchedModel = modelsFromJson.FirstOrDefault(model => model.AbsolutePath == file);
+            if (matchedModel == null) {
+              // newly added
+              var model = new ImageModel(file);
+              Application.Current.Dispatcher.Invoke(() => Add(model));
+            } else {
+              // already exists
+              var model = new ImageModel(matchedModel);
+              Application.Current.Dispatcher.Invoke(() => Add(model));
+            }
+          });
         }
         IsModelsAvailable = true;
         Save();
