@@ -101,6 +101,10 @@
           </ComboBox>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <CheckBox Content="Likes"
+                    IsChecked="{Binding SearchLiked}"
+                    IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                    Margin="10" />
           <hc:TextBox Name="TagTextBox"
                       Text="{Binding CaptionSearchQuery}"
                       IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"

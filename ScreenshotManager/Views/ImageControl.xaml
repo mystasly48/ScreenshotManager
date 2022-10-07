@@ -5,37 +5,130 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ScreenshotManager.Views"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignWidth="320"
              d:DesignHeight="180"
              Width="320"
              Height="180">
-  <Image Source="{Binding Thumbnail}"
-         ToolTip="{Binding ToolTip}"
-         Stretch="Uniform"
-         RenderOptions.BitmapScalingMode="HighQuality">
-    <Image.ContextMenu>
-      <ContextMenu>
-        <MenuItem Header="Copy the image"
-                  Command="{Binding CopyImageToClipboardCommand}"
-                  CommandParameter="{Binding}" />
-        <MenuItem Header="Copy the filepath"
-                  Command="{Binding CopyFilepathToClipboardCommand}" />
-        <MenuItem Header="Copy the filename"
-                  Command="{Binding CopyFilenameToClipboardCommand}" />
-        <MenuItem Header="Edit tags"
-                  Command="{Binding EditTagsCommand}" />
-        <MenuItem Header="Open the image"
-                  Command="{Binding OpenImageCommand}" />
-        <MenuItem Header="Open the folder"
-                  Command="{Binding OpenFolderCommand}" />
-        <MenuItem Header="Delete"
-                  Command="{Binding RemoveImageCommand}" />
-      </ContextMenu>
-    </Image.ContextMenu>
-    <Image.InputBindings>
-      <MouseBinding Gesture="LeftClick"
-                    Command="{Binding ShowImageCommand}" />
-    </Image.InputBindings>
-  </Image>
+  <UserControl.Resources>
+    <Style x:Key="FavoriteToggleButton"
+           TargetType="{x:Type ToggleButton}">
+      <Setter Property="Background"
+              Value="{DynamicResource MaterialDesignToolBackground}" />
+      <Setter Property="Foreground"
+              Value="{DynamicResource MaterialDesignToolForeground}" />
+      <Setter Property="Width"
+              Value="40" />
+      <Setter Property="Height"
+              Value="40" />
+      <Setter Property="FontSize"
+              Value="18" />
+      <Setter Property="HorizontalContentAlignment"
+              Value="Center" />
+      <Setter Property="VerticalContentAlignment"
+              Value="Center" />
+      <Setter Property="Padding"
+              Value="0" />
+      <Setter Property="Cursor"
+              Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type ToggleButton}">
+            <Grid ClipToBounds="True">
+              <materialDesign:PackIcon Name="UncheckedIcon"
+                                       Background="Transparent"
+                                       Kind="HeartOutline"
+                                       Width="40"
+                                       Height="40" />
+              <materialDesign:PackIcon Name="HoveredIcon"
+                                       Foreground="#f50057"
+                                       Background="Transparent"
+                                       Kind="HeartOutline"
+                                       Width="40"
+                                       Height="40" />
+              <materialDesign:PackIcon Name="CheckedIcon"
+                                       Kind="Heart"
+                                       Foreground="#f50057"
+                                       Background="Transparent"
+                                       Width="40"
+                                       Height="40" />
+              <ContentPresenter x:Name="Presenter"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver"
+                       Value="True">
+                <Setter Property="Visibility"
+                        TargetName="HoveredIcon"
+                        Value="Visible" />
+              </Trigger>
+              <Trigger Property="IsMouseOver"
+                       Value="False">
+                <Setter Property="Visibility"
+                        TargetName="HoveredIcon"
+                        Value="Collapsed" />
+              </Trigger>
+              <Trigger Property="IsChecked"
+                       Value="True">
+                <Setter Property="Visibility"
+                        TargetName="UncheckedIcon"
+                        Value="Collapsed" />
+                <Setter Property="Visibility"
+                        TargetName="CheckedIcon"
+                        Value="Visible" />
+              </Trigger>
+              <Trigger Property="IsChecked"
+                       Value="False">
+                <Setter Property="Visibility"
+                        TargetName="UncheckedIcon"
+                        Value="Visible" />
+                <Setter Property="Visibility"
+                        TargetName="CheckedIcon"
+                        Value="Collapsed" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+  <Grid>
+    <Image Source="{Binding Thumbnail}"
+           ToolTip="{Binding ToolTip}"
+           Stretch="Uniform"
+           RenderOptions.BitmapScalingMode="HighQuality">
+      <Image.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Copy the image"
+                    Command="{Binding CopyImageToClipboardCommand}"
+                    CommandParameter="{Binding}" />
+          <MenuItem Header="Copy the filepath"
+                    Command="{Binding CopyFilepathToClipboardCommand}" />
+          <MenuItem Header="Copy the filename"
+                    Command="{Binding CopyFilenameToClipboardCommand}" />
+          <MenuItem Header="Edit tags"
+                    Command="{Binding EditTagsCommand}" />
+          <MenuItem Header="Open the image"
+                    Command="{Binding OpenImageCommand}" />
+          <MenuItem Header="Open the folder"
+                    Command="{Binding OpenFolderCommand}" />
+          <MenuItem Header="Delete"
+                    Command="{Binding RemoveImageCommand}" />
+        </ContextMenu>
+      </Image.ContextMenu>
+      <Image.InputBindings>
+        <MouseBinding Gesture="LeftClick"
+                      Command="{Binding ShowImageCommand}" />
+      </Image.InputBindings>
+    </Image>
+    <ToggleButton Style="{StaticResource FavoriteToggleButton}"
+                  ToolTip="Like"
+                  VerticalAlignment="Bottom"
+                  HorizontalAlignment="Right"
+                  Margin="0 0 5 5"
+                  IsChecked="{Binding Liked}">
+    </ToggleButton>
+  </Grid>
 </UserControl>
