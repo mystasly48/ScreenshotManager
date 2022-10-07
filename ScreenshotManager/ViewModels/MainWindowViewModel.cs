@@ -97,6 +97,12 @@ namespace ScreenshotManager.ViewModels {
       }
     }
 
+    private bool _searchLiked;
+    public bool SearchLiked {
+      get => _searchLiked;
+      set => SetProperty(ref _searchLiked, value);
+    }
+
     private string _captionSearchQuery;
     public string CaptionSearchQuery {
       get => _captionSearchQuery;
@@ -174,15 +180,25 @@ namespace ScreenshotManager.ViewModels {
       var personName = SelectedSearchPersonTagModel?.Name;
       var caption = CaptionSearchQuery?.Trim();
       if (string.IsNullOrEmpty(tagName) && string.IsNullOrEmpty(personName) && string.IsNullOrEmpty(caption)) {
-        // Reset search query.
-        // Change ItemsSource to ImageModelsManager.Models
-        VisibleSearchResults = false;
+        if (SearchLiked) {
+          VisibleSearchResults = true;
+          SearchResultImageModels =
+            new ObservableCollection<ImageModel>(ImageModelsManager.Models.Select(x => x).Where(x => x.Liked));
+        } else {
+          // Reset search query.
+          // Change ItemsSource to ImageModelsManager.Models
+          VisibleSearchResults = false;
+        }
       } else {
         // Merge the search results.
         // Change ItemsSource to SearchResultImageModels
         VisibleSearchResults = true;
         var result = await Task.Run(() => {
           var models = ImageModelsManager.Models.Select(x => x);
+          // if "liked" is checked, exclude non-liked images
+          if (SearchLiked) {
+            models = models.Where(x => x.Liked);
+          }
 
           // search by tag
           if (!string.IsNullOrEmpty(tagName)) {

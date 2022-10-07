@@ -37,6 +37,8 @@ namespace ScreenshotManager.Models {
     [JsonProperty]
     public string AbsolutePath { get; private set; }
     [JsonProperty]
+    public bool Liked { get; set; }
+    [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
     [JsonProperty]
     public ObservableSet<string> PersonTags { get; private set; } = new();
@@ -71,6 +73,7 @@ namespace ScreenshotManager.Models {
     public ImageModel(ImageModel _model) {
       this.Thumbnail = Screenshot.LoadThumbnail(_model.AbsolutePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = _model.AbsolutePath;
+      this.Liked = _model.Liked;
       this.Tags = _model.Tags;
       this.PersonTags = _model.PersonTags;
       this.AutoCaption = _model.AutoCaption;
