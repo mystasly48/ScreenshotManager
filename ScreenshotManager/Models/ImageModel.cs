@@ -9,7 +9,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
   public class ImageModel : Observable {
@@ -40,6 +39,17 @@ namespace ScreenshotManager.Models {
       }
     }
     private ImageSource _thumbnail = ImageHelper.DefaultThumbnail;
+
+    //[JsonIgnore]
+    //public BitmapImage Image {
+    //  get {
+    //    return _image;
+    //  }
+    //  private set {
+    //    SetProperty(ref _image, value);
+    //  }
+    //}
+    //private BitmapImage _image = null;
 
     [JsonIgnore]
     public string FolderName => Path.GetDirectoryName(AbsolutePath);
@@ -91,12 +101,17 @@ namespace ScreenshotManager.Models {
 
     private void LoadImages(object obj) {
       this.Thumbnail = ImageHelper.LoadThumbnail(AbsolutePath);
-      this.Image = ImageHelper.LoadBitmapImage(AbsolutePath);
-      ProcessByAI();
+      //this.Image = ImageHelper.LoadBitmapImage(AbsolutePath);
+      //ProcessByAI();
     }
 
     public async void CopyImageToClipboard() {
       Clipboard.SetImage(await ImageHelper.LoadBitmapImageAsync(AbsolutePath));
+      //if (this.Image == null) {
+      //  Clipboard.SetImage(await ImageHelper.LoadBitmapImageAsync(AbsolutePath));
+      //} else {
+      //  Clipboard.SetImage(this.Image);
+      //}
     }
 
     public void CopyFilepathToClipboard() {
@@ -130,6 +145,7 @@ namespace ScreenshotManager.Models {
     }
 
     public void ShowImageDialog() {
+      // TODO: potential for improvement
       HandyControl.Controls.Dialog.Show(new ImageDialog(AbsolutePath));
     }
 
