@@ -4,6 +4,7 @@ using ScreenshotManager.Views;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -42,6 +43,8 @@ namespace ScreenshotManager.Models {
       set => SetProperty(ref _isSelected, value);
     }
     [JsonProperty]
+    public bool Liked { get; set; }
+    [JsonProperty]
     public ObservableSet<string> Tags { get; set; } = new();
     [JsonProperty]
     public ObservableSet<string> PersonTags { get; private set; } = new();
@@ -53,6 +56,14 @@ namespace ScreenshotManager.Models {
     public List<FaceRecognitionResponse> FaceRecognitionResults { get; private set; }
     [JsonProperty]
     public List<TextRecognitionResponse> TextRecognitionResults { get; private set; }
+    [JsonIgnore]
+    public string ToolTip {
+      get {
+        string personTagsStr = string.Join(",", PersonTags);
+        string captionStr = string.Join("\n", TextRecognitionResults.Select(x => x.Text));
+        return $"{{{personTagsStr}}}\n{captionStr}";
+      }
+    }
 
     const int THUMBNAIL_WIDTH = 320;
     const int THUMBNAIL_HEIGHT = 180;
@@ -68,6 +79,7 @@ namespace ScreenshotManager.Models {
     public ImageModel(ImageModel _model) {
       this.Thumbnail = Screenshot.LoadThumbnail(_model.AbsolutePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = _model.AbsolutePath;
+      this.Liked = _model.Liked;
       this.Tags = _model.Tags;
       this.PersonTags = _model.PersonTags;
       this.AutoCaption = _model.AutoCaption;

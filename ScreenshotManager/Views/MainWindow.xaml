@@ -76,7 +76,7 @@
                     ToolTip="Select a tag to search"
                     Height="30"
                     Margin="10"
-                    Width="180">
+                    Width="260">
             <ComboBox.ItemsSource>
               <CompositeCollection>
                 <ListBoxItem Content="Please select" />
@@ -84,19 +84,13 @@
               </CompositeCollection>
             </ComboBox.ItemsSource>
           </ComboBox>
-          <Button Content="Search ①"
-                  Command="{Binding SearchTagCommand}"
-                  IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                  ToolTip="Execute search by a selected tag"
-                  Height="30"
-                  Width="80"/>
           <ComboBox SelectedIndex="{Binding SelectedSearchPersonTagIndex}"
                     DisplayMemberPath="Name"
                     IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
                     ToolTip="Select a tag to search"
                     Height="30"
                     Margin="10"
-                    Width="180">
+                    Width="260">
             <ComboBox.ItemsSource>
               <CompositeCollection>
                 <ListBoxItem Content="Please select" />
@@ -104,23 +98,22 @@
               </CompositeCollection>
             </ComboBox.ItemsSource>
           </ComboBox>
-          <Button Content="Search ②"
-                  Command="{Binding SearchPersonTagCommand}"
-                  IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                  ToolTip="Execute search by a selected person"
-                  Height="30"
-                  Width="80"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <CheckBox Content="Likes"
+                    IsChecked="{Binding SearchLiked}"
+                    IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
+                    Margin="10" />
           <hc:TextBox Name="TagTextBox"
                       Text="{Binding CaptionSearchQuery}"
                       IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
                       Margin="10"
-                      Width="460" />
-          <Button Content="Search ③"
-                  Command="{Binding SearchCaptionCommand}"
+                      Width="450" />
+          <Button Content="Search"
+                  Command="{Binding SearchCommand}"
                   IsEnabled="{Binding Path=(utils:ImageModelsManager.IsModelsAvailable)}"
-                  ToolTip="Execute search by a caption"
+                  ToolTip="Search by conditions"
+                  Margin="0, 0, 10, 0"
                   Height="30"
                   Width="80" />
         </StackPanel>
