@@ -51,6 +51,8 @@ namespace ScreenshotManager.Utils {
     // FIXME: Crash here when you close the app while this is running
     public async static void UpdateImageModelsToLocalAsync() {
       await Task.Run(async () => {
+        Logger.WriteLine("UpdateImageModelsToLocalAsync Started");
+        var startedDateTime = DateTime.Now;
         IsModelsAvailable = false;
         var modelsFromJson = Load();
         var files = GetLocalImageFiles();
@@ -70,6 +72,8 @@ namespace ScreenshotManager.Utils {
         }
         IsModelsAvailable = true;
         Save();
+        var elapsed = DateTime.Now - startedDateTime;
+        Logger.WriteLine($"UpdateImageModelsToLocalAsync Completed, {elapsed.TotalSeconds}secs");
       });
     }
 
