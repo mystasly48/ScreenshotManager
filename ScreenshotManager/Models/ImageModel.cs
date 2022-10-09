@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ScreenshotManager.Models {
-  public class ImageModel {
+  public class ImageModel : Observable {
     [JsonIgnore]
     public ICommand CopyImageToClipboardCommand => new AnotherCommandImplementation((obj) => CopyImageToClipboard());
     [JsonIgnore]
@@ -29,7 +31,16 @@ namespace ScreenshotManager.Models {
     public ICommand ShowImageCommand => new AnotherCommandImplementation((obj) => ShowImageDialog());
 
     [JsonIgnore]
-    public ImageSource Thumbnail { get; }
+    public ImageSource Thumbnail {
+      get {
+        return _thumbnail;
+      }
+      private set {
+        SetProperty(ref _thumbnail, value);
+      }
+    }
+    private ImageSource _thumbnail = ImageHelper.DefaultThumbnail;
+
     [JsonIgnore]
     public string FolderName => Path.GetDirectoryName(AbsolutePath);
     [JsonIgnore]
@@ -59,19 +70,14 @@ namespace ScreenshotManager.Models {
       }
     }
 
-    const int THUMBNAIL_WIDTH = 320;
-    const int THUMBNAIL_HEIGHT = 180;
-
     public ImageModel() { }
 
     public ImageModel(string path) {
-      this.Thumbnail = Screenshot.LoadThumbnail(path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = path;
-      ProcessByAI();
+      ThreadPool.QueueUserWorkItem(LoadImages);
     }
 
     public ImageModel(ImageModel _model) {
-      this.Thumbnail = Screenshot.LoadThumbnail(_model.AbsolutePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
       this.AbsolutePath = _model.AbsolutePath;
       this.Liked = _model.Liked;
       this.Tags = _model.Tags;
@@ -80,11 +86,17 @@ namespace ScreenshotManager.Models {
       this.AutoCaptionKana = _model.AutoCaptionKana;
       this.FaceRecognitionResults = _model.FaceRecognitionResults;
       this.TextRecognitionResults = _model.TextRecognitionResults;
+      ThreadPool.QueueUserWorkItem(LoadImages);
+    }
+
+    private void LoadImages(object obj) {
+      this.Thumbnail = ImageHelper.LoadThumbnail(AbsolutePath);
+      this.Image = ImageHelper.LoadBitmapImage(AbsolutePath);
       ProcessByAI();
     }
 
     public async void CopyImageToClipboard() {
-      Clipboard.SetImage(await Screenshot.LoadBitmapImageAsync(AbsolutePath));
+      Clipboard.SetImage(await ImageHelper.LoadBitmapImageAsync(AbsolutePath));
     }
 
     public void CopyFilepathToClipboard() {

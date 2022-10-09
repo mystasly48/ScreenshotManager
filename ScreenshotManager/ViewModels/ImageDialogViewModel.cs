@@ -17,7 +17,7 @@ namespace ScreenshotManager.ViewModels {
     }
 
     private async void LoadImageAsync(string image_absolute_path) {
-      this.Image = await Screenshot.LoadBitmapImageAsync(image_absolute_path);
+      this.Image = await ImageHelper.LoadBitmapImageAsync(image_absolute_path);
     }
   }
 }
