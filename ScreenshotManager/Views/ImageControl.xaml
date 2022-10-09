@@ -95,34 +95,52 @@
     </Style>
   </UserControl.Resources>
   <Grid>
-    <Image Source="{Binding Thumbnail}"
-           ToolTip="{Binding ToolTip}"
-           Stretch="Uniform"
-           RenderOptions.BitmapScalingMode="HighQuality">
-      <Image.ContextMenu>
-        <ContextMenu>
-          <MenuItem Header="Copy the image"
-                    Command="{Binding CopyImageToClipboardCommand}"
-                    CommandParameter="{Binding}" />
-          <MenuItem Header="Copy the filepath"
-                    Command="{Binding CopyFilepathToClipboardCommand}" />
-          <MenuItem Header="Copy the filename"
-                    Command="{Binding CopyFilenameToClipboardCommand}" />
-          <MenuItem Header="Edit tags"
-                    Command="{Binding EditTagsCommand}" />
-          <MenuItem Header="Open the image"
-                    Command="{Binding OpenImageCommand}" />
-          <MenuItem Header="Open the folder"
-                    Command="{Binding OpenFolderCommand}" />
-          <MenuItem Header="Delete"
-                    Command="{Binding RemoveImageCommand}" />
-        </ContextMenu>
-      </Image.ContextMenu>
-      <Image.InputBindings>
-        <MouseBinding Gesture="LeftClick"
-                      Command="{Binding ShowImageCommand}" />
-      </Image.InputBindings>
-    </Image>
+    <Border BorderBrush="#5e9ed6">
+      <Image Source="{Binding Thumbnail}"
+             ToolTip="{Binding ToolTip}"
+             Stretch="Uniform"
+             RenderOptions.BitmapScalingMode="HighQuality">
+        <Image.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Copy the image"
+                      Command="{Binding CopyImageToClipboardCommand}"
+                      CommandParameter="{Binding}" />
+            <MenuItem Header="Copy the filepath"
+                      Command="{Binding CopyFilepathToClipboardCommand}" />
+            <MenuItem Header="Copy the filename"
+                      Command="{Binding CopyFilenameToClipboardCommand}" />
+            <MenuItem Header="Edit tags"
+                      Command="{Binding EditTagsCommand}" />
+            <MenuItem Header="Open the image"
+                      Command="{Binding OpenImageCommand}" />
+            <MenuItem Header="Open the folder"
+                      Command="{Binding OpenFolderCommand}" />
+            <MenuItem Header="Delete"
+                      Command="{Binding RemoveImageCommand}" />
+          </ContextMenu>
+        </Image.ContextMenu>
+        <Image.InputBindings>
+          <MouseBinding Gesture="LeftClick"
+                        Command="{Binding ShowImageCommand}" />
+        </Image.InputBindings>
+      </Image>
+      <Border.Style>
+        <Style>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding IsSelected}"
+                         Value="True">
+              <Setter Property="Border.BorderThickness"
+                      Value="5" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsSelected}"
+                         Value="False">
+              <Setter Property="Border.BorderThickness"
+                      Value="0" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Border.Style>
+    </Border>
     <ToggleButton Style="{StaticResource FavoriteToggleButton}"
                   ToolTip="Like"
                   VerticalAlignment="Bottom"

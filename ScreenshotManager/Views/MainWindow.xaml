@@ -6,10 +6,9 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:ScreenshotManager.Views"
         xmlns:utils="clr-namespace:ScreenshotManager.Utils"
-        xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="Screenshot Manager"
+        Title="{Binding Path=(utils:SettingsManager.ProductTitle)}"
         Height="700"
         Width="1200"
         Background="Transparent"
@@ -125,39 +124,27 @@
                        VerticalScrollBarVisibility="Auto"
                        HorizontalScrollBarVisibility="Disabled"
                        IsInertiaEnabled="True">
-        <ItemsControl>
-          <ItemsControl.Style>
+        <local:ImageControlWrapPanel>
+          <local:ImageControlWrapPanel.Style>
             <Style>
               <Style.Triggers>
-                <DataTrigger Binding="{Binding VisibleSearchResults}"
+                <DataTrigger Binding="{Binding Path=DataContext.VisibleSearchResults,
+                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                              Value="True">
-                  <Setter Property="ItemsControl.ItemsSource"
-                          Value="{Binding SearchResultImageModels}" />
+                  <Setter Property="local:ImageControlWrapPanel.ItemsSource"
+                          Value="{Binding Path=DataContext.SearchResultImageModels,
+                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding VisibleSearchResults}"
+                <DataTrigger Binding="{Binding Path=DataContext.VisibleSearchResults,
+                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                              Value="False">
-                  <Setter Property="ItemsControl.ItemsSource"
+                  <Setter Property="local:ImageControlWrapPanel.ItemsSource"
                           Value="{Binding Path=(utils:ImageModelsManager.Models)}" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
-          </ItemsControl.Style>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <local:ImageControl ImageModel="{Binding}"
-                                  Margin="10" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <wpftk:VirtualizingWrapPanel Margin="20 0"
-                                           HorizontalAlignment="Left"
-                                           VerticalAlignment="Top"
-                                           VirtualizingPanel.VirtualizationMode="Recycling"
-                                           VirtualizingPanel.IsVirtualizing="True" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-        </ItemsControl>
+          </local:ImageControlWrapPanel.Style>
+        </local:ImageControlWrapPanel>
       </hc:ScrollViewer>
       <Button Style="{StaticResource ButtonIconCircular}"
               hc:IconElement.Geometry="{StaticResource UpGeometry}"

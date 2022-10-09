@@ -15,6 +15,7 @@ namespace ScreenshotManager.ViewModels {
     public ICommand TakeOneCommand => new AnotherCommandImplementation(ExecuteTakeScreenshot);
     public ICommand TakeContinuousCommand => new AnotherCommandImplementation(ExecuteTakeScreenshots);
     public ICommand SearchCommand => new AnotherCommandImplementation(ExecuteSearch);
+    public ICommand ImageModelSelectCommand => new AnotherCommandImplementation(ExecuteImageModelSelection);
     public ICommand ClosingCommand => new AnotherCommandImplementation(ExecuteClosing);
 
     public ObservableCollection<ScreenModel> AllScreens { get; private set; }
@@ -222,6 +223,15 @@ namespace ScreenshotManager.ViewModels {
           return new ObservableCollection<ImageModel>(models);
         });
         SearchResultImageModels = result;
+      }
+    }
+
+    private void ExecuteImageModelSelection(object obj) {
+      System.Diagnostics.Debug.WriteLine("MainWindowViewModel: ImageModelSelectCommand");
+      System.Diagnostics.Debug.WriteLine(obj.GetType());
+      System.Diagnostics.Debug.WriteLine(obj);
+      if (obj is ImageModel model) {
+        model.IsSelected = !model.IsSelected;
       }
     }
 
